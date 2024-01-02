@@ -1,0 +1,84 @@
+# pricescanner.py
+
+import re
+from lxml import html
+from selenium import webdriver
+from selenium.webdriver.chrome.service import Service as ChromeService
+from selenium.webdriver.common.by import By
+
+def download_html(url, headless=True):
+    html_content = None
+    try:
+        # Set up Chrome options for headless browsing
+        chrome_options = webdriver.ChromeOptions()
+        if headless:
+            chrome_options.add_argument("--headless")
+
+        # Use webdriver_manager to automatically download and manage ChromeDriver
+        with webdriver.Chrome(service=ChromeService(), options=chrome_options) as driver:
+            # Navigate to the URL
+            driver.get(url)
+
+            # Wait for the page to load (adjust the sleep duration as needed)
+            driver.implicitly_wait(5)
+
+            # Get the HTML content
+            html_content = driver.page_source
+    except Exception as e:
+        print(f"Error downloading HTML content: {e}")
+    finally:
+        return html_content
+
+
+def extract_prices(html_content):
+    results = []
+    item_name = ""
+    try:
+        # Parse the HTML content using lxml
+        tree = html.fromstring(html_content)
+
+        # Use XPath to access the sellers and items
+        item_name = tree.xpath('//div[@class="name_and_rating"]/h1/strong/text() | //div[@class="name_and_rating"]/h1/text()[normalize-space()]')
+        item_name = [item.strip() for item in item_name]
+        item_name = ' '.join(item_name)
+        
+        elements = tree.xpath('//*[@id="listing"]/ul/li')
+        number_pattern = re.compile(r'\b\d+[,.]?\d*\b')
+        for element in elements:
+            item = {}
+            merchant = element.xpath('div[@class="item_info"]/div[@class="item_merchant"]/div/a/span')[0].text.strip()
+            merchant_reviews = element.xpath('div[@class="item_info"]/div[@class="item_merchant"]/div[@class="wrap_merchant_reviews"]/a[@class="merchant_reviews"]')[0].text.strip()
+            # merchant_rating = element.xpath('div[@class="item_info"]/div[@class="item_merchant"]/div[@class="wrap_merchant_reviews"]/')[0].text.strip() TODO
+            price = element.xpath('div[@class="item_price "]/div[@class="item_basic_price"]')[0].text.strip()
+            try:
+                delivery_price = element.xpath('div[@class="item_price "]/div[@class="item_delivery_price "]')[0].text.strip()
+            except:
+                delivery_price = None
+            try:
+                free_delivery = element.xpath('div[@class="item_price "]/div[@class="free_shipping_threshold"]/span/span/span')[0].text.strip()
+            except:
+                free_delivery = None
+            availability = element.xpath('div[@class="item_price "]/div[@class="item_availability"]/span/@class')[0]
+            # convert item values to the appropriate data types
+            item['seller'] = merchant
+            merchant_reviews = number_pattern.search(merchant_reviews).group()
+            item['seller_reviews'] = int(merchant_reviews.replace('.', ''))
+            price = number_pattern.search(price).group()
+            item['price'] = float(price.replace(',', '.'))
+            if delivery_price:
+                delivery_price = number_pattern.search(delivery_price).group()
+                item['delivery_price'] = float(delivery_price.replace(',', '.'))
+            else:
+                item['delivery_price'] = 0.0
+            item['total_price'] = item['price'] + item['delivery_price']
+            if free_delivery:
+                free_delivery = number_pattern.search(free_delivery).group()
+                item['free_delivery'] = float(free_delivery.replace(',', '.'))
+            else:
+                item['free_delivery'] = free_delivery
+            item['availability'] = True if availability == 'available' else False
+            results.append(item)
+    except Exception as e:
+        print(f"Error extracting prices: {e}")
+    finally:
+        return item_name, results

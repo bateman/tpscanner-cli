@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "tpscanner"
+version = "0.1.0"
+description = ""
+authors = ["Fabio Calefato <@bateman>"]
+license = "MIT License"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+lxml = "^5.0.0"
+requests = "^2.31.0"
+selenium = "^4.16.0"
+openpyxl = "^3.1.2"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
