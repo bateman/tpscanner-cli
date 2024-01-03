@@ -58,7 +58,7 @@ def save_intermediate_results(filename, sheetname, items):
     workbook.save(filename)
     
     
-def save_best_deals(filename, title, best_deals_items):
+def save_best_cumulative_deals(filename, title, best_deals_items):
     workbook = load_workbook(filename)
     # create a new worksheet 
     worksheet = workbook.create_sheet(title)

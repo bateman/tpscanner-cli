@@ -1,6 +1,6 @@
 # tpscanner.py
 from price_scanner import download_html, extract_prices
-from save_results import save_intermediate_results, save_best_deals
+from save_results import save_intermediate_results, save_best_cumulative_deals
 from best_deal_finder import find_best_deals
 
 import datetime
@@ -39,11 +39,11 @@ def main():
         print(f"Saving the results for for {name} to a spreadsheet...")
         save_intermediate_results(f"results_{formatted_datetime}.xlsx", name, items)
     
-    print("\nFinding the best deal...")
-    best_deals = find_best_deals(all_items)
-    print(f"Found {len(best_deals)} best deals")
+    print("\nFinding the best deals...")
+    best_cumulative_deals = find_best_deals(all_items)
+    print(f"Found {len(best_cumulative_deals)} best deals")
     print("Saving best deals to a spreadsheet...\n")
-    save_best_deals(f"results_{formatted_datetime}.xlsx", "Best Deals", best_deals)
+    save_best_cumulative_deals(f"results_{formatted_datetime}.xlsx", "Best Cumulative Deals", best_cumulative_deals)
     print("Done.")
 
 if __name__ == "__main__":
