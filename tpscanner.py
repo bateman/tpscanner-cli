@@ -39,7 +39,7 @@ def main():
         print(f"Saving the results for for {name} to a spreadsheet...")
         save_intermediate_results(f"results_{formatted_datetime}.xlsx", name, items)
     
-    print("\nFinding the best deals...")
+    print("\nFinding the best cumulative deals...")
     best_cumulative_deals = find_best_deals(all_items)
     print(f"Found {len(best_cumulative_deals)} best deals")
     print("Saving best deals to a spreadsheet...\n")
