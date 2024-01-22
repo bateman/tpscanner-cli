@@ -41,8 +41,9 @@ The script outputs a spreadsheet named `results_<current_datetime>.xlsx` with th
 
 The script contains the following main functions:
 
-* `extract_prices_plus_shipping(html)`: This function extracts the prices from the given HTML for items that have separate shipping costs.
-* `extract_best_price_shipping_included(html)`: This function extracts the prices from the given HTML for the cheapest item that has separate shipping costs included.
+* `download_html(url, wait, headless)`: This functions uses Selenium to download the HTML content of the page at URL
+* `extract_prices_plus_shipping(html, quantity)`: This function extracts the prices from the given HTML for items that have separate shipping costs.
+* `extract_best_price_shipping_included(html, quantity)`: This function extracts the prices from the given HTML for the cheapest item that has separate shipping costs included.
 * `save_intermediate_results(filename, name, items)`: This function saves the intermediate results to a spreadsheet.
 * `find_best_deals(all_items)`: This function finds the best cumulative deals from the list of all items.
 * `save_best_cumulative_deals(filename, name, best_cumulative_deals)`: This function saves the best cumulative deals to a spreadsheet.
