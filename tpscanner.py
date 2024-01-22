@@ -1,5 +1,5 @@
 # tpscanner.py
-from price_scanner import download_html, extract_prices
+from price_scanner import download_html, extract_prices_plus_shipping, extract_best_price_shipping_included
 from save_results import save_intermediate_results, save_best_cumulative_deals
 from best_deal_finder import find_best_deals
 
@@ -30,8 +30,14 @@ def main():
     print("Scanning the prices for each URL...")
     all_items = {}
     for url in urls:
+        # download prices plus shipping costs
         html = download_html(url, headless)
-        name, items = extract_prices(html)
+        name, items = extract_prices_plus_shipping(html)
+        # download best price with shipping costs included
+        html = download_html(url + "?sort=prezzo_totale", headless)
+        name, item = extract_best_price_shipping_included(html)
+        if item not in items:
+            items.append(item)
         all_items[name] = items
         print(f"\nFound {len(items)} items for {name}")
         # sort the list of items by price
