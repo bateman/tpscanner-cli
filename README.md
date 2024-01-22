@@ -30,7 +30,7 @@ poetry shell
 To run the script, use the following command:
 
 ```bash
-python tpscanner.py -u url1 url2 ...
+python tpscanner.py -u url1 url2 ... [-q n1 n2 ...]
 ```
 
 ## Output
