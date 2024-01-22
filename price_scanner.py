@@ -62,13 +62,13 @@ def extract_prices_plus_shipping(html_content):
                 delivery_price = element.xpath(
                     'div[@class="item_price "]/div[@class="item_delivery_price "]'
                 )[0].text.strip()
-            except:
+            except Exception:
                 delivery_price = None
             try:
                 free_delivery = element.xpath(
                     'div[@class="item_price "]/div[@class="free_shipping_threshold"]/span/span/span'
                 )[0].text.strip()
-            except:
+            except Exception:
                 free_delivery = None
             availability = element.xpath(
                 'div[@class="item_price "]/div[@class="item_availability"]/span/@class'
@@ -122,7 +122,7 @@ def extract_best_price_shipping_included(html_content):
             free_delivery = element.xpath(
                 'div[@class="item_price total_price_sorting"]/div[@class="free_shipping_threshold"]/span/span/span'
             )[0].text.strip()
-        except:
+        except Exception:
             free_delivery = None
         availability = element.xpath(
             'div[@class="item_price total_price_sorting"]/div[@class="item_availability"]/span/@class'
