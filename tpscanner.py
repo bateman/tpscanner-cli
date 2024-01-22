@@ -1,4 +1,5 @@
 # tpscanner.py
+
 from price_scanner import (
     download_html,
     extract_prices_plus_shipping,
@@ -19,6 +20,13 @@ def main():
     parser.add_argument(
         "-u", "--url", nargs="+", help="List of URLs to scan", required=True
     )
+    parser.add_argument(
+        "-q",
+        "--quantity",
+        nargs="+",
+        help="List of quantities to buy for each URL (in order)",
+        required=False,
+    )
     parser.add_argument("--headless", action="store_true", help="Run in headless mode")
 
     # Parse command line arguments
@@ -26,6 +34,11 @@ def main():
 
     # Access the list of URLs provided
     urls = args.url
+    # Access the list of quantities for each URL provided
+    quantities = args.quantity
+    if not quantities:
+        quantities = [1] * len(urls)
+    # Whether to run in headless mode
     headless = args.headless
 
     # Save current date and time
@@ -35,13 +48,17 @@ def main():
 
     print("Scanning the prices for each URL...")
     all_items = {}
+    i = 0
+    wait = 5
     for url in urls:
+        quantity = int(quantities[i])
+        i += 1
         # download prices plus shipping costs
-        html = download_html(url, headless)
-        name, items = extract_prices_plus_shipping(html)
+        html = download_html(url, wait, headless)
+        name, items = extract_prices_plus_shipping(html, quantity)
         # download best price with shipping costs included
-        html = download_html(url + "?sort=prezzo_totale", headless)
-        name, item = extract_best_price_shipping_included(html)
+        html = download_html(url + "?sort=prezzo_totale", wait, headless)
+        name, item = extract_best_price_shipping_included(html, quantity)
         if item not in items:
             items.append(item)
         all_items[name] = items

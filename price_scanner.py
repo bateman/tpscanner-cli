@@ -1,12 +1,13 @@
 # pricescanner.py
 
 import re
+import time
 from lxml import html
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service as ChromeService
 
 
-def download_html(url, headless=True):
+def download_html(url, wait=5, headless=True):
     html_content = None
     try:
         # Set up Chrome options for headless browsing
@@ -26,13 +27,15 @@ def download_html(url, headless=True):
 
             # Get the HTML content
             html_content = driver.page_source
+            # wait seconds before next URL
+            time.sleep(wait)
     except Exception as e:
-        print(f"Error downloading HTML content: {e}")
-    finally:
-        return html_content
+        raise (f"Error downloading HTML content: {e}")
+
+    return html_content
 
 
-def extract_prices_plus_shipping(html_content):
+def extract_prices_plus_shipping(html_content, quantity=1):
     results = []
     item_name = ""
     try:
@@ -78,19 +81,20 @@ def extract_prices_plus_shipping(html_content):
                 merchant,
                 merchant_reviews,
                 price,
+                quantity,
                 delivery_price,
                 free_delivery,
                 availability,
             )
             results.append(item)
     except Exception as e:
-        print(f"Error extracting prices: {e}")
-    finally:
-        return item_name, results
+        raise (f"Error extracting prices: {e}")
+
+    return item_name, results
 
 
 # TODO
-def extract_best_price_shipping_included(html_content):
+def extract_best_price_shipping_included(html_content, quantity=1):
     item = {}
     item_name = ""
     try:
@@ -132,18 +136,25 @@ def extract_best_price_shipping_included(html_content):
             merchant,
             merchant_reviews,
             price,
+            quantity,
             delivery_price,
             free_delivery,
             availability,
         )
     except Exception as e:
-        print(f"Error extracting prices: {e}")
-    finally:
-        return item_name, item
+        raise (f"Error extracting prices: {e}")
+
+    return item_name, item
 
 
 def _convert_data_types(
-    merchant, merchant_reviews, price, delivery_price, free_delivery, availability
+    merchant,
+    merchant_reviews,
+    price,
+    quantity,
+    delivery_price,
+    free_delivery,
+    availability,
 ):
     number_pattern = re.compile(r"\b\d+[,.]?\d*\b")
     item = {}
@@ -153,16 +164,22 @@ def _convert_data_types(
     item["seller_reviews"] = int(merchant_reviews.replace(".", ""))
     price = number_pattern.search(price).group()
     item["price"] = float(price.replace(",", "."))
+    item["quantity"] = quantity
     if delivery_price:
         delivery_price = number_pattern.search(delivery_price).group()
         item["delivery_price"] = float(delivery_price.replace(",", "."))
     else:
         item["delivery_price"] = 0.0
-    item["total_price"] = item["price"] + item["delivery_price"]
+    item["total_price"] = item["price"] * quantity
     if free_delivery:
         free_delivery = number_pattern.search(free_delivery).group()
         item["free_delivery"] = float(free_delivery.replace(",", "."))
     else:
         item["free_delivery"] = free_delivery
+    if free_delivery and item["total_price"] >= item["free_delivery"]:
+        item["total_price_plus_delivery"] = item["total_price"]
+    else:
+        item["total_price_plus_delivery"] = item["total_price"] + item["delivery_price"]
     item["availability"] = True if availability == "available" else False
+
     return item

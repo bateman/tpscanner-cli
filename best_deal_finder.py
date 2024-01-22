@@ -1,3 +1,6 @@
+# best_deal_finder.py
+
+
 def find_best_deals(all_items):
     # find the common sellers
     common_sellers = []
@@ -19,9 +22,20 @@ def find_best_deals(all_items):
                     best_deal_items["free_delivery"] = item["free_delivery"]
                     best_deal_items["availability"] = item["availability"]
                     best_deal_items["cumulative_price"] = (
-                        best_deal_items.get("cumulative_price", 0) + item["price"]
+                        best_deal_items.get("cumulative_price", 0)
+                        + item["total_price"]  # total_price is quantity * price
                     )
         best_deals[seller] = best_deal_items
+
+    # add the delivery price to the cumulative price if the cumulative price is less than the free delivery price threshold
+    for seller, item in best_deals.items():
+        if item["cumulative_price"] >= item["free_delivery"]:
+            item["cumulative_price_plus_delivery"] = item["cumulative_price"]
+        else:
+            item["cumulative_price_plus_delivery"] = (
+                item["cumulative_price"] + item["delivery_price"]
+            )
+        best_deals[seller] = item
 
     # sort best deals by price
     best_deals = sorted(best_deals.values(), key=lambda x: x["cumulative_price"])
