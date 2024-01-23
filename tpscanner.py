@@ -61,7 +61,7 @@ def main():
     print("\nFinding the best cumulative deals...")
     best_cumulative_deals = find_best_deals(all_items)
     print(f"Found {len(best_cumulative_deals)} best deals")
-    print("Saving best deals to a spreadsheet...\n")
+    print("Saving best deals to the spreadsheet...\n")
     save_best_cumulative_deals(
         f"results_{formatted_datetime}.xlsx",
         "Best Cumulative Deals",
