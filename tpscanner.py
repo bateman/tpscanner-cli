@@ -27,17 +27,24 @@ def main():
         help="List of quantities to buy for each URL (in order)",
         required=False,
     )
+    parser.add_argument(
+        "-w", "--wait", type=int, help="Wait time between URLs requests", required=False
+    )
     parser.add_argument("--headless", action="store_true", help="Run in headless mode")
 
     # Parse command line arguments
     args = parser.parse_args()
 
-    # Access the list of URLs provided
+    # Retrieve the list of URLs provided
     urls = args.url
-    # Access the list of quantities for each URL provided
+    # Retrieve the list of quantities for each URL provided
     quantities = args.quantity
     if not quantities:
         quantities = [1] * len(urls)
+    # Retrieve the wait time between URLs requests
+    wait = args.wait
+    if not wait:
+        wait = 5
     # Whether to run in headless mode
     headless = args.headless
 
@@ -49,7 +56,6 @@ def main():
     print("Scanning the prices for each URL...")
     all_items = {}
     i = 0
-    wait = 5
     for url in urls:
         quantity = int(quantities[i])
         i += 1
