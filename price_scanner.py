@@ -101,7 +101,6 @@ def extract_prices_plus_shipping(html_content, quantity=1):
     return item_name, results
 
 
-# TODO
 def extract_best_price_shipping_included(html_content, quantity=1):
     item = {}
     item_name = ""
