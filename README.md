@@ -30,12 +30,13 @@ poetry shell
 To run the script, use the following command:
 
 ```bash
-python tpscanner.py -u url1 url2 ... [-q n1 n2 ...] [-w n]
+python tpscanner.py -u url1 url2 ... | -f path/to/input/file.txt [-q n1 n2 ...] [-w n] [--headless]
 
 options:
   -h, --help            show this help message and exit
   -u URL [URL ...], --url URL [URL ...]
                         List of URLs to scan
+  -f FILE, --file FILE  File containing URLs to scan
   -q QUANTITY [QUANTITY ...], --quantity QUANTITY [QUANTITY ...]
                         List of quantities to buy for each URL (in order)
   -w WAIT, --wait WAIT  Wait time between URLs requests
