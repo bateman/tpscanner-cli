@@ -15,11 +15,9 @@ import argparse
 def main():
     # Set up the command line parser
     parser = argparse.ArgumentParser(description="Trovaprezziscanner - URL Scanner")
-
-    # Add command line argument for URLs
-    parser.add_argument(
-        "-u", "--url", nargs="+", help="List of URLs to scan", required=True
-    )
+    group = parser.add_mutually_exclusive_group(required=True)
+    group.add_argument("-u", "--url", nargs="+", help="List of URLs to scan")
+    group.add_argument("-f", "--file", help="File containing URLs to scan")
     parser.add_argument(
         "-q",
         "--quantity",
@@ -33,24 +31,10 @@ def main():
     parser.add_argument("--headless", action="store_true", help="Run in headless mode")
 
     # Parse command line arguments
-    args = parser.parse_args()
+    urls, quantities, wait, headless = parse_command_line(parser)
 
-    # Retrieve the list of URLs provided
-    urls = args.url
-    # Retrieve the list of quantities for each URL provided
-    quantities = args.quantity
-    if not quantities:
-        quantities = [1] * len(urls)
-    # Retrieve the wait time between URLs requests
-    wait = args.wait
-    if not wait:
-        wait = 5
-    # Whether to run in headless mode
-    headless = args.headless
-
-    # Save current date and time
+    # Save current date and time in the desired format
     current_datetime = datetime.datetime.now()
-    # Format the date and time as a string (you can customize the format)
     formatted_datetime = current_datetime.strftime("%d-%m-%Y_%H-%M-%S")
 
     print("Scanning the prices for each URL...")
@@ -84,6 +68,42 @@ def main():
         best_cumulative_deals,
     )
     print("Done.")
+
+
+def parse_command_line(parser):
+    args = parser.parse_args()
+
+    # Retrieve the list of URLs provided
+    urls = args.url
+    quantities = []
+    if not urls:
+        urls = []
+        # Read the URLs from the file provided
+        with open(args.file, "r") as f:
+            lines = f.read().splitlines()
+        for line in lines:
+            # remove any trailing or leading whitespaces
+            line = line.strip()
+            # if line contains whitespaces in between, split and retrieve the quantity
+            if " " in line:
+                url, q = line.split()
+                urls.append(url)
+                quantities.append(q)
+            else:
+                urls.append(line)
+
+    if not quantities:
+        # Retrieve the list of quantities for each URL provided
+        quantities = args.quantity
+        if not quantities:
+            quantities = [1] * len(urls)
+    # Retrieve the wait time between URLs requests
+    wait = args.wait
+    if not wait:
+        wait = 5
+    # Whether to run in headless mode
+    headless = args.headless
+    return urls, quantities, wait, headless
 
 
 if __name__ == "__main__":
