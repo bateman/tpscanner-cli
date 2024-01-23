@@ -160,6 +160,7 @@ cython_debug/
 #.idea/
 
 *.xlsx
+*.txt
 .DS_Store
 .python-version
 .vscode/
