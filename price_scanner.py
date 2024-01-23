@@ -1,10 +1,10 @@
 # pricescanner.py
 
 import re
-import time
 from lxml import html
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service as ChromeService
+from selenium.webdriver.common.by import By
 
 
 def download_html(url, wait=5, headless=True):
@@ -19,20 +19,28 @@ def download_html(url, wait=5, headless=True):
         with webdriver.Chrome(
             service=ChromeService(), options=chrome_options
         ) as driver:
+            driver.maximize_window()
             # Navigate to the URL
             driver.get(url)
 
             # Wait for the page to load (adjust the sleep duration as needed)
-            driver.implicitly_wait(5)
+            driver.implicitly_wait(wait)
 
-            # Get the HTML content
+            # Accept cookies
+            driver.find_element(
+                By.CSS_SELECTOR, ".iubenda-cs-accept-btn.iubenda-cs-btn-primary"
+            ).click()
+
+            # Get the new HTML content
             html_content = driver.page_source
-            # wait seconds before next URL
-            time.sleep(wait)
+
+            # Click on the swicth to show items with shipping costs included
+            driver.find_element(By.CSS_SELECTOR, ".include_shipping").click()
+            html_content_shipping = driver.page_source
     except Exception as e:
         raise (f"Error downloading HTML content: {e}")
 
-    return html_content
+    return html_content, html_content_shipping
 
 
 def extract_prices_plus_shipping(html_content, quantity=1):

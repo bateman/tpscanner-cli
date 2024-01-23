@@ -10,6 +10,7 @@ from best_deal_finder import find_best_deals
 
 import datetime
 import argparse
+import time
 
 
 def main():
@@ -43,12 +44,10 @@ def main():
     for url in urls:
         quantity = int(quantities[i])
         i += 1
-        # download prices plus shipping costs
-        html = download_html(url, wait, headless)
-        name, items = extract_prices_plus_shipping(html, quantity)
-        # download best price with shipping costs included
-        html = download_html(url + "?sort=prezzo_totale", wait, headless)
-        name, item = extract_best_price_shipping_included(html, quantity)
+        # download prices plus shipping costs (html1) and best price with shipping costs included (html2)
+        html1, html2 = download_html(url, wait, headless)
+        name, items = extract_prices_plus_shipping(html1, quantity)
+        _, item = extract_best_price_shipping_included(html2, quantity)
         if item not in items:
             items.append(item)
         all_items[name] = items
@@ -57,6 +56,8 @@ def main():
         items.sort(key=lambda x: x["price"])
         print(f"Saving the results for for {name} to a spreadsheet...")
         save_intermediate_results(f"results_{formatted_datetime}.xlsx", name, items)
+        # wait seconds before next URL
+        time.sleep(wait)
 
     print("\nFinding the best cumulative deals...")
     best_cumulative_deals = find_best_deals(all_items)
