@@ -29,7 +29,8 @@ def find_best_deals(all_items):
 
     # add the delivery price to the cumulative price if the cumulative price is less than the free delivery price threshold
     for seller, item in best_deals.items():
-        if item["cumulative_price"] >= item["free_delivery"]:
+        # if the seller indicates a free delivery threshold and the cumulative price is greater than or equal to the threshold
+        if item["free_delivery"] and item["cumulative_price"] >= item["free_delivery"]:
             item["cumulative_price_plus_delivery"] = item["cumulative_price"]
         else:
             item["cumulative_price_plus_delivery"] = (
@@ -38,6 +39,8 @@ def find_best_deals(all_items):
         best_deals[seller] = item
 
     # sort best deals by price
-    best_deals = sorted(best_deals.values(), key=lambda x: x["cumulative_price"])
+    best_deals = sorted(
+        best_deals.values(), key=lambda x: x["cumulative_price_plus_delivery"]
+    )
 
     return best_deals
