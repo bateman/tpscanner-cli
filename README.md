@@ -43,6 +43,12 @@ options:
   --headless            Run in headless mode
 ```
 
+Alternatively, you can run the script as:
+
+```bash
+poetry run tpscanner ...
+```
+
 ## Output
 
 The script outputs a spreadsheet named `results_<current_datetime>.xlsx` with the sorted list of items and the best cumulative deals.
