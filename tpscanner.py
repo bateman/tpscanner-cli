@@ -1,16 +1,24 @@
 # tpscanner.py
 
+import argparse
+import datetime
+import time
+
+from best_deal_finder import (
+    find_best_deals,
+    find_individual_best_deals,
+    remove_unavailable_items,
+)
 from price_scanner import (
     download_html,
-    extract_prices_plus_shipping,
     extract_best_price_shipping_included,
+    extract_prices_plus_shipping,
 )
-from save_results import save_intermediate_results, save_best_cumulative_deals
-from best_deal_finder import find_best_deals, remove_unavailable_items
-
-import datetime
-import argparse
-import time
+from save_results import (
+    save_best_cumulative_deals,
+    save_best_individual_deals,
+    save_intermediate_results,
+)
 
 
 def main():
@@ -51,10 +59,10 @@ def main():
         if item not in items:
             items.append(item)
         all_items[name] = items
-        print(f"\nFound {len(items)} items for {name}")
+        print(f"\nFound {len(items)} items for `{name}`")
         # sort the list of items by price
         items.sort(key=lambda x: x["price"])
-        print(f"Saving the results for for {name} to a spreadsheet...")
+        print(f"Saving the results for for `{name}` to a spreadsheet...")
         save_intermediate_results(f"results_{formatted_datetime}.xlsx", name, items)
         # wait seconds before next URL
         time.sleep(wait)
@@ -62,16 +70,25 @@ def main():
     print("\nRemoving items marked as not available...")
     all_items, count = remove_unavailable_items(all_items)
     print(f"{count} items removed")
+    print("\nChecking the presence of individual best deals...")
+    best_individual_deals = find_individual_best_deals(all_items)
+    print(f"Found {len(best_individual_deals)} individual best deals")
+    print("Saving best individual deals to the spreadsheet...")
+    save_best_individual_deals(
+        f"results_{formatted_datetime}.xlsx",
+        "Best Individual Deals",
+        best_individual_deals,
+    )
     print("\nFinding the best cumulative deals...")
     best_cumulative_deals = find_best_deals(all_items)
     print(f"Found {len(best_cumulative_deals)} best deals")
-    print("Saving best deals to the spreadsheet...\n")
+    print("Saving best cumulative deals to the spreadsheet...")
     save_best_cumulative_deals(
         f"results_{formatted_datetime}.xlsx",
         "Best Cumulative Deals",
         best_cumulative_deals,
     )
-    print("Done.")
+    print("\nDone.")
 
 
 def parse_command_line(parser):

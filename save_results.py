@@ -6,17 +6,90 @@ from openpyxl.styles import Font, Alignment, NamedStyle
 
 
 def save_intermediate_results(filename, sheetname, items):
-    title = sheetname
+    headers = [
+        "Seller",
+        "Reviews",
+        "Price",
+        "Quantity",
+        "Delivery Price",
+        "Free Delivery From",
+        "Total Price",
+        "Total Price + Delivery",
+        "Availability",
+    ]
+    keys = [
+        "seller",
+        "seller_reviews",
+        "price",
+        "quantity",
+        "delivery_price",
+        "free_delivery",
+        "total_price",
+        "total_price_plus_delivery",
+        "availability",
+    ]
+    _create_workbook(filename, sheetname, headers, items, keys)
+
+
+def save_best_individual_deals(filename, sheetname, best_deals_items):
+    headers = [
+        "Seller",
+        "Reviews",
+        "Price",
+        "Quantity",
+        "Delivery Price",
+        "Free Delivery From",
+        "Total Price",
+        "Total Price + Delivery",
+        "Availability",
+    ]
+    keys = [
+        "seller",
+        "seller_reviews",
+        "price",
+        "quantity",
+        "delivery_price",
+        "free_delivery",
+        "total_price",
+        "total_price_plus_delivery",
+        "availability",
+    ]
+    _create_workbook(filename, sheetname, headers, best_deals_items, keys)
+
+
+def save_best_cumulative_deals(filename, sheetname, best_deals_items):
+    headers = [
+        "Seller",
+        "Reviews",
+        "Cumulative Price",
+        "Delivery Price",
+        "Free Delivery from",
+        "Cumulative Price + Delivery",
+        "Availability",
+    ]
+    keys = [
+        "seller",
+        "seller_reviews",
+        "cumulative_price",
+        "delivery_price",
+        "free_delivery",
+        "cumulative_price_plus_delivery",
+        "availability",
+    ]
+    _create_workbook(filename, sheetname, headers, best_deals_items, keys)
+
+
+def _create_workbook(filename, sheetname, headers, items, keys):
     # ensure that the sheet name is less than 31 characters
     if len(sheetname) > 31:
-        title = sheetname[:31]
+        sheetname = sheetname[:31]
     # Check if the file already exists
     if os.path.exists(filename):
         print(f"File {filename} already exists. Opening it...")
         # If the file exists, open it
         workbook = load_workbook(filename)
         # create a new worksheet
-        worksheet = workbook.create_sheet(title)
+        worksheet = workbook.create_sheet(sheetname)
         # find existing named style
         header_style = workbook._named_styles["header_style"]
     else:
@@ -25,7 +98,7 @@ def save_intermediate_results(filename, sheetname, items):
         workbook = Workbook()
         # Use the active sheet as the new sheet
         worksheet = workbook.active
-        worksheet.title = title
+        worksheet.title = sheetname
         # create a new header style
         header_style = NamedStyle(
             name="header_style",
@@ -34,15 +107,8 @@ def save_intermediate_results(filename, sheetname, items):
         )
 
     # Set column names in the header row
-    worksheet.cell(row=1, column=1, value="Seller")
-    worksheet.cell(row=1, column=2, value="Reviews")
-    worksheet.cell(row=1, column=3, value="Price")
-    worksheet.cell(row=1, column=4, value="Quantity")
-    worksheet.cell(row=1, column=5, value="Delivery Price")
-    worksheet.cell(row=1, column=6, value="Free Delivery From")
-    worksheet.cell(row=1, column=7, value="Total Price")
-    worksheet.cell(row=1, column=8, value="Total Price + Delivery")
-    worksheet.cell(row=1, column=9, value="Availability")
+    for i, header in enumerate(headers, start=1):
+        worksheet.cell(row=1, column=i, value=header)
 
     # apply the header style with bold and center alignment
     header_row = worksheet[1]
@@ -51,58 +117,11 @@ def save_intermediate_results(filename, sheetname, items):
 
     # Write the data
     for row, item in enumerate(items, start=2):
-        worksheet.cell(row=row, column=1, value=item["seller"])
-        worksheet.cell(row=row, column=2, value=item["seller_reviews"])
-        worksheet.cell(row=row, column=3, value=item["price"])
-        worksheet.cell(row=row, column=4, value=item["quantity"])
-        worksheet.cell(row=row, column=5, value=item["delivery_price"])
-        worksheet.cell(row=row, column=6, value=item["free_delivery"])
-        worksheet.cell(row=row, column=7, value=item["total_price"])
-        worksheet.cell(row=row, column=8, value=item["total_price_plus_delivery"])
-        worksheet.cell(row=row, column=9, value=item["availability"])
-
-    # Set number format for the 'Price', 'Quantity', 'Delivery Price',  'Free Delivery From',
-    # 'Total Price', 'Total Price + Delivery' columns
-    for col_num in range(3, 9):
-        for row in range(2, worksheet.max_row + 1):
-            worksheet.cell(row=row, column=col_num).number_format = "#,##0.00"
-
-    workbook.save(filename)
-
-
-def save_best_cumulative_deals(filename, title, best_deals_items):
-    workbook = load_workbook(filename)
-    # create a new worksheet
-    worksheet = workbook.create_sheet(title)
-    # find existing named style
-    header_style = workbook._named_styles["header_style"]
-
-    # Set column names in the header row
-    worksheet.cell(row=1, column=1, value="Seller")
-    worksheet.cell(row=1, column=2, value="Reviews")
-    worksheet.cell(row=1, column=3, value="Cumulative Price")
-    worksheet.cell(row=1, column=4, value="Delivery Price")
-    worksheet.cell(row=1, column=5, value="Free Delivery from")
-    worksheet.cell(row=1, column=6, value="Cumulative Price + Delivery")
-    worksheet.cell(row=1, column=7, value="Availability")
-
-    # apply the header style with bold and center alignment
-    header_row = worksheet[1]
-    for cell in header_row:
-        cell.style = header_style
-
-    # Write the data
-    for row, item in enumerate(best_deals_items, start=2):
-        worksheet.cell(row=row, column=1, value=item["seller"])
-        worksheet.cell(row=row, column=2, value=item["seller_reviews"])
-        worksheet.cell(row=row, column=3, value=item["cumulative_price"])
-        worksheet.cell(row=row, column=4, value=item["delivery_price"])
-        worksheet.cell(row=row, column=5, value=item["free_delivery"])
-        worksheet.cell(row=row, column=6, value=item["cumulative_price_plus_delivery"])
-        worksheet.cell(row=row, column=7, value=item["availability"])
+        for i, key in enumerate(keys, start=1):
+            worksheet.cell(row=row, column=i, value=item[key])
 
     # Set number format for the numeric columns
-    for col_num in range(3, 7):
+    for col_num in range(3, len(headers) + 1):
         for row in range(2, worksheet.max_row + 1):
             worksheet.cell(row=row, column=col_num).number_format = "#,##0.00"
 

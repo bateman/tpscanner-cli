@@ -1,6 +1,6 @@
 # TPScanner
 
-TPScanner is a Python script that extracts prices of items from [Trovaprezzi.it](https://www.trovaprezzi.it/), sorts them, and saves the results in a spreadsheet. It also finds the best cumulative deals.
+TPScanner is a Python script that extracts prices of items from [Trovaprezzi.it](https://www.trovaprezzi.it/), sorts them, and saves the results in a spreadsheet. It also finds the best cumulative and individual deals.
 
 ## Setup
 
@@ -53,16 +53,6 @@ poetry run tpscanner ...
 
 The script outputs a spreadsheet named `results_<current_datetime>.xlsx` with the sorted list of items and the best cumulative deals.
 
-## Functions
-
-The script contains the following main functions:
-
-* `download_html(url, wait, headless)`: This functions uses Selenium to download the HTML content of the page at URL
-* `extract_prices_plus_shipping(html, quantity)`: This function extracts the prices from the given HTML for items that have separate shipping costs.
-* `extract_best_price_shipping_included(html, quantity)`: This function extracts the prices from the given HTML for the cheapest item that has separate shipping costs included.
-* `save_intermediate_results(filename, name, items)`: This function saves the intermediate results to a spreadsheet.
-* `find_best_deals(all_items)`: This function finds the best cumulative deals from the list of all items.
-* `save_best_cumulative_deals(filename, name, best_cumulative_deals)`: This function saves the best cumulative deals to a spreadsheet.
 
 ## License
 
