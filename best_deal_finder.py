@@ -1,6 +1,16 @@
 # best_deal_finder.py
 
 
+def remove_unavailable_items(all_items):
+    count = 0
+    for _, items in all_items.items():
+        for item in items:
+            if item["availability"] is False:
+                items.remove(item)
+                count += 1
+    return all_items, count
+
+
 def find_best_deals(all_items):
     # find the common sellers
     common_sellers = []

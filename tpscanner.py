@@ -6,7 +6,7 @@ from price_scanner import (
     extract_best_price_shipping_included,
 )
 from save_results import save_intermediate_results, save_best_cumulative_deals
-from best_deal_finder import find_best_deals
+from best_deal_finder import find_best_deals, remove_unavailable_items
 
 import datetime
 import argparse
@@ -59,6 +59,9 @@ def main():
         # wait seconds before next URL
         time.sleep(wait)
 
+    print("\nRemoving items marked as not available...")
+    all_items, count = remove_unavailable_items(all_items)
+    print(f"{count} items removed")
     print("\nFinding the best cumulative deals...")
     best_cumulative_deals = find_best_deals(all_items)
     print(f"Found {len(best_cumulative_deals)} best deals")
