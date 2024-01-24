@@ -23,7 +23,7 @@ from save_results import (
 
 def main():
     # Set up the command line parser
-    parser = argparse.ArgumentParser(description="Trovaprezziscanner - URL Scanner")
+    parser = argparse.ArgumentParser(description="TrovaPrezzi Scanner")
     group = parser.add_mutually_exclusive_group(required=True)
     group.add_argument("-u", "--url", nargs="+", help="List of URLs to scan")
     group.add_argument("-f", "--file", help="File containing URLs to scan")
