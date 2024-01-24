@@ -5,6 +5,8 @@ from lxml import html
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service as ChromeService
 from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 
 
 def download_html(url, wait=5, headless=True):
@@ -23,19 +25,28 @@ def download_html(url, wait=5, headless=True):
             # Navigate to the URL
             driver.get(url)
 
-            # Wait for the page to load (adjust the sleep duration as needed)
-            driver.implicitly_wait(wait)
-
             # Accept cookies
-            driver.find_element(
-                By.CSS_SELECTOR, ".iubenda-cs-accept-btn.iubenda-cs-btn-primary"
+            WebDriverWait(driver, wait).until(
+                EC.element_to_be_clickable(
+                    (By.CSS_SELECTOR, ".iubenda-cs-accept-btn.iubenda-cs-btn-primary")
+                )
             ).click()
+
+            # Click on show more offers button
+            # while True:
+            #     try:
+            #         WebDriverWait(driver, wait).until(EC.element_to_be_clickable((By.XPATH, "//a[@class='more_offers button link-arrow data-link']"))).click()
+            #     except Exception:
+            #         # the button is not present anymore
+            #         break
 
             # Get the new HTML content
             html_content = driver.page_source
 
             # Click on the swicth to show items with shipping costs included
-            driver.find_element(By.CSS_SELECTOR, ".include_shipping").click()
+            WebDriverWait(driver, wait).until(
+                EC.element_to_be_clickable((By.CSS_SELECTOR, ".include_shipping"))
+            ).click()
             html_content_shipping = driver.page_source
     except Exception as e:
         raise (f"Error downloading HTML content: {e}")
@@ -43,7 +54,7 @@ def download_html(url, wait=5, headless=True):
     return html_content, html_content_shipping
 
 
-def extract_prices_plus_shipping(html_content, quantity=1):
+def extract_prices_plus_shipping(html_content, quantity):
     results = []
     item_name = ""
     try:
@@ -101,7 +112,7 @@ def extract_prices_plus_shipping(html_content, quantity=1):
     return item_name, results
 
 
-def extract_best_price_shipping_included(html_content, quantity=1):
+def extract_best_price_shipping_included(html_content, quantity):
     item = {}
     item_name = ""
     try:
