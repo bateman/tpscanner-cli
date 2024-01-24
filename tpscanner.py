@@ -4,7 +4,7 @@ import argparse
 import datetime
 import time
 
-from best_deal_finder import (
+from deals_finder import (
     find_best_deals,
     find_individual_best_deals,
     remove_unavailable_items,

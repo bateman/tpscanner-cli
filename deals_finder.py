@@ -1,4 +1,4 @@
-# best_deal_finder.py
+# deals_finder.py
 
 
 def remove_unavailable_items(all_items):
