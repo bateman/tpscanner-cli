@@ -43,7 +43,7 @@ def download_html(url, wait=5, headless=True):
     return html_content, html_content_shipping
 
 
-def extract_prices_plus_shipping(html_content, quantity=1):
+def extract_prices_plus_shipping(html_content, quantity):
     results = []
     item_name = ""
     try:
@@ -101,7 +101,7 @@ def extract_prices_plus_shipping(html_content, quantity=1):
     return item_name, results
 
 
-def extract_best_price_shipping_included(html_content, quantity=1):
+def extract_best_price_shipping_included(html_content, quantity):
     item = {}
     item_name = ""
     try:
