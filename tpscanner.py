@@ -64,7 +64,7 @@ def main():
         items.sort(key=lambda x: x["price"])
         print(f"Saving the results for for `{name}` to a spreadsheet...")
         save_intermediate_results(f"results_{formatted_datetime}.xlsx", name, items)
-        # wait seconds before next URL
+        # wait seconds before next URL to avoid being blocked and captcha
         time.sleep(wait)
 
     print("\nRemoving items marked as not available...")
