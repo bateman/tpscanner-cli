@@ -37,7 +37,7 @@ def download_html(url, wait=5, headless=True):
             #     try:
             #         WebDriverWait(driver, wait).until(EC.element_to_be_clickable((By.XPATH, "//a[@class='more_offers button link-arrow data-link']"))).click()
             #     except Exception:
-            #         # the button is not present anymore
+            #         # no more offers (the button is not present anymore)
             #         break
 
             # Get the new HTML content
