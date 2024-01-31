@@ -3,6 +3,7 @@
 import os
 from openpyxl import Workbook, load_workbook
 from openpyxl.styles import Font, Alignment, NamedStyle
+from logger import Logger
 
 
 def save_intermediate_results(filename, sheetname, items):
@@ -80,12 +81,13 @@ def save_best_cumulative_deals(filename, sheetname, best_deals_items):
 
 
 def _create_workbook(filename, sheetname, headers, items, keys):
+    logger = Logger()
     # ensure that the sheet name is less than 31 characters
     if len(sheetname) > 31:
         sheetname = sheetname[:31]
     # Check if the file already exists
     if os.path.exists(filename):
-        print(f"File {filename} already exists. Opening it...")
+        logger.debug(f"File `{filename}` already exists. Opening it...")
         # If the file exists, open it
         workbook = load_workbook(filename)
         # create a new worksheet
@@ -93,7 +95,7 @@ def _create_workbook(filename, sheetname, headers, items, keys):
         # find existing named style
         header_style = workbook._named_styles["header_style"]
     else:
-        print(f"File {filename} does not exist. Creating it...")
+        logger.debug(f"File `{filename}` does not exist. Creating it...")
         # else create a workbook
         workbook = Workbook()
         # Use the active sheet as the new sheet

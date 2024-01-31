@@ -3,6 +3,9 @@
 import argparse
 import datetime
 import time
+from rich.progress import Progress
+from logger import Logger
+
 
 from deals_finder import (
     find_best_deals,
@@ -27,6 +30,9 @@ def main():
     group = parser.add_mutually_exclusive_group(required=True)
     group.add_argument("-u", "--url", nargs="+", help="List of URLs to scan")
     group.add_argument("-f", "--file", help="File containing URLs to scan")
+    group.add_argument(
+        "-l", "--level", help="Logging level (debug, info, warning, error, critical)"
+    )
     parser.add_argument(
         "-q",
         "--quantity",
@@ -40,59 +46,75 @@ def main():
     parser.add_argument("--headless", action="store_true", help="Run in headless mode")
 
     # Parse command line arguments
-    urls, quantities, wait, headless = parse_command_line(parser)
+    level, urls, quantities, wait, headless = parse_command_line(parser)
+
+    # Setup logging level
+    logger = Logger()
+    logger.set_log_level(level)
+    logger.debug(f"Logging level: {level}")
 
     # Save current date and time in the desired format
     current_datetime = datetime.datetime.now()
     formatted_datetime = current_datetime.strftime("%d-%m-%Y_%H-%M-%S")
 
-    print("Scanning the prices for each URL...")
+    logger.start("TrovaPrezzi Scanner")
+    logger.info("Scanning the item prices for each URL.")
     all_items = {}
     i = 0
-    for url in urls:
-        quantity = int(quantities[i])
-        i += 1
-        # download prices plus shipping costs (html1) and best price with shipping costs included (html2)
-        html1, html2 = download_html(url, wait, headless)
-        name, items = extract_prices_plus_shipping(html1, quantity)
-        _, item = extract_best_price_shipping_included(html2, quantity)
-        if item not in items:
-            items.append(item)
-        all_items[name] = items
-        print(f"\nFound {len(items)} items for `{name}`")
-        # sort the list of items by price
-        items.sort(key=lambda x: x["price"])
-        print(f"Saving the results for for `{name}` to a spreadsheet...")
-        save_intermediate_results(f"results_{formatted_datetime}.xlsx", name, items)
-        # wait seconds before next URL to avoid being blocked and captcha
-        time.sleep(wait)
+    with Progress() as progress:
+        task = progress.add_task("Processing URLs.", total=len(urls))
 
-    print("\nRemoving items marked as not available...")
+        for url in urls:
+            if progress.finished:
+                break
+            quantity = int(quantities[i])
+            i += 1
+            # download prices plus shipping costs (html1) and best price with shipping costs included (html2)
+            html1, html2 = download_html(url, wait, headless)
+            name, items = extract_prices_plus_shipping(html1, quantity)
+            _, item = extract_best_price_shipping_included(html2, quantity)
+            if item not in items:
+                items.append(item)
+            all_items[name] = items
+            logger.info(f"Found {len(items)} items for `{name}`.")
+            # sort the list of items by price
+            items.sort(key=lambda x: x["price"])
+            logger.debug(f"Saving the results for for `{name}` to spreadsheet.")
+            save_intermediate_results(f"results_{formatted_datetime}.xlsx", name, items)
+            # wait seconds before next URL to avoid being blocked and captcha
+            time.sleep(wait)
+            progress.update(task, advance=1)
+
+    logger.debug("Removing items marked as not available.")
     all_items, count = remove_unavailable_items(all_items)
-    print(f"{count} items removed")
-    print("\nChecking the presence of individual best deals...")
+    logger.debug(f"{count} items removed.")
+    logger.info("Checking the presence of individual best deals.")
     best_individual_deals = find_individual_best_deals(all_items)
-    print(f"Found {len(best_individual_deals)} individual best deals")
-    print("Saving best individual deals to the spreadsheet...")
-    save_best_individual_deals(
-        f"results_{formatted_datetime}.xlsx",
-        "Best Individual Deals",
-        best_individual_deals,
-    )
-    print("\nFinding the best cumulative deals...")
+    logger.info(f"Found {len(best_individual_deals)} individual best deals.")
+    if best_individual_deals:
+        logger.debug("Saving best individual deals.")
+        save_best_individual_deals(
+            f"results_{formatted_datetime}.xlsx",
+            "Best Individual Deals",
+            best_individual_deals,
+        )
+    logger.info("Finding the best cumulative deals.")
     best_cumulative_deals = find_best_deals(all_items)
-    print(f"Found {len(best_cumulative_deals)} best deals")
-    print("Saving best cumulative deals to the spreadsheet...")
+    logger.info(f"Found {len(best_cumulative_deals)} best deals.")
+    logger.debug("Saving best cumulative deals.")
     save_best_cumulative_deals(
         f"results_{formatted_datetime}.xlsx",
         "Best Cumulative Deals",
         best_cumulative_deals,
     )
-    print("\nDone.")
+    logger.end("Done.")
 
 
 def parse_command_line(parser):
     args = parser.parse_args()
+
+    # Retrieve the logging level
+    level = args.level or "info"
 
     # Retrieve the list of URLs provided
     urls = args.url
@@ -124,7 +146,7 @@ def parse_command_line(parser):
         wait = 5
     # Whether to run in headless mode
     headless = args.headless
-    return urls, quantities, wait, headless
+    return level, urls, quantities, wait, headless
 
 
 if __name__ == "__main__":
