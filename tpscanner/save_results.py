@@ -3,7 +3,7 @@
 import os
 from openpyxl import Workbook, load_workbook
 from openpyxl.styles import Font, Alignment, NamedStyle
-from logger import Logger
+from tpscanner.logger import logger
 
 
 def save_intermediate_results(filename, sheetname, items):
@@ -81,7 +81,6 @@ def save_best_cumulative_deals(filename, sheetname, best_deals_items):
 
 
 def _create_workbook(filename, sheetname, headers, items, keys):
-    logger = Logger()
     # ensure that the sheet name is less than 31 characters
     if len(sheetname) > 31:
         sheetname = sheetname[:31]

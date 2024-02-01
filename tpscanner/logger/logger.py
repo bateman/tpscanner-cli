@@ -8,7 +8,7 @@ from enum import Enum
 class Format(Enum):
     START = "[bold][magenta]"
     END = START
-    DEBUG = "[lightgrey]"
+    DEBUG = "[dim][grey]"
     INFO = "[cyan]"
     WARN = "[bold][orange]"
     ERROR = "[bold][red]"

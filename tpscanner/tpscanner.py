@@ -4,20 +4,21 @@ import argparse
 import datetime
 import time
 from rich.progress import Progress
-from logger import Logger
+from tpscanner.logger import logger
+from tpscanner.config import config
 
 
-from deals_finder import (
+from tpscanner.deals_finder import (
     find_best_deals,
     find_individual_best_deals,
     remove_unavailable_items,
 )
-from price_scanner import (
+from tpscanner.price_scanner import (
     download_html,
     extract_best_price_shipping_included,
     extract_prices_plus_shipping,
 )
-from save_results import (
+from tpscanner.save_results import (
     save_best_cumulative_deals,
     save_best_individual_deals,
     save_intermediate_results,
@@ -30,7 +31,7 @@ def main():
     group = parser.add_mutually_exclusive_group(required=True)
     group.add_argument("-u", "--url", nargs="+", help="List of URLs to scan")
     group.add_argument("-f", "--file", help="File containing URLs to scan")
-    group.add_argument(
+    parser.add_argument(
         "-l", "--level", help="Logging level (debug, info, warning, error, critical)"
     )
     parser.add_argument(
@@ -48,8 +49,7 @@ def main():
     # Parse command line arguments
     level, urls, quantities, wait, headless = parse_command_line(parser)
 
-    # Setup logging level
-    logger = Logger()
+    # Set the logging level
     logger.set_log_level(level)
     logger.debug(f"Logging level: {level}")
 
@@ -82,7 +82,7 @@ def main():
             logger.debug(f"Saving the results for for `{name}` to spreadsheet.")
             save_intermediate_results(f"results_{formatted_datetime}.xlsx", name, items)
             # wait seconds before next URL to avoid being blocked and captcha
-            time.sleep(wait)
+            time.sleep(config.sleep_rate_limit)
             progress.update(task, advance=1)
 
     logger.debug("Removing items marked as not available.")
