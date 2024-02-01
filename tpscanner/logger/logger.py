@@ -1,8 +1,9 @@
 # utils.py
 
 import logging
-from rich.logging import RichHandler
 from enum import Enum
+
+from rich.logging import RichHandler
 
 
 class Format(Enum):

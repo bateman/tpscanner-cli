@@ -1,8 +1,10 @@
 # save_results.py
 
 import os
+
 from openpyxl import Workbook, load_workbook
-from openpyxl.styles import Font, Alignment, NamedStyle
+from openpyxl.styles import Alignment, Font, NamedStyle
+
 from tpscanner.logger import logger
 
 

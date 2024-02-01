@@ -3,16 +3,16 @@
 import argparse
 import datetime
 import time
+
 from rich.progress import Progress
-from tpscanner.logger import logger
+
 from tpscanner.config import config
-
-
 from tpscanner.deals_finder import (
     find_best_deals,
     find_individual_best_deals,
     remove_unavailable_items,
 )
+from tpscanner.logger import logger
 from tpscanner.price_scanner import (
     download_html,
     extract_best_price_shipping_included,
