@@ -54,6 +54,12 @@ Alternatively:
 poetry run tpscanner ...
 ```
 
+or 
+
+```bash
+make run ...
+```
+
 ## Output
 
 The script outputs a spreadsheet named `results_<current_datetime>.xlsx` with the sorted list of items and the best cumulative deals.

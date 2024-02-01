@@ -12,3 +12,6 @@ clean:
 
 precommit: format lint
 	pre-commit run --all-files
+
+run:
+	python -m tpscanner $@
