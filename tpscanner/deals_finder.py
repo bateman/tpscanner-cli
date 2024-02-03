@@ -42,6 +42,7 @@ def find_best_deals(all_items):
                     best_deal_items["delivery_price"] = item["delivery_price"]
                     best_deal_items["free_delivery"] = item["free_delivery"]
                     best_deal_items["availability"] = item["availability"]
+                    best_deal_items["link"] = item["link"]
                     best_deal_items["cumulative_price"] = (
                         best_deal_items.get("cumulative_price", 0)
                         + item["total_price"]  # total_price is quantity * price

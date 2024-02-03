@@ -3,7 +3,7 @@
 import os
 
 from openpyxl import Workbook, load_workbook
-from openpyxl.styles import Alignment, Font, NamedStyle
+from openpyxl.styles import Alignment, Color, Font, NamedStyle
 
 from tpscanner.logger import logger
 
@@ -20,6 +20,7 @@ def save_intermediate_results(filename, sheetname, items):
         "Total Price",
         "Total Price + Delivery",
         "Availability",
+        "See Offer",
     ]
     keys = [
         "seller",
@@ -32,6 +33,7 @@ def save_intermediate_results(filename, sheetname, items):
         "total_price",
         "total_price_plus_delivery",
         "availability",
+        "link",
     ]
     _create_workbook(filename, sheetname, headers, items, keys)
 
@@ -48,6 +50,7 @@ def save_best_individual_deals(filename, sheetname, best_deals_items):
         "Total Price",
         "Total Price + Delivery",
         "Availability",
+        "See Offer",
     ]
     keys = [
         "seller",
@@ -60,6 +63,7 @@ def save_best_individual_deals(filename, sheetname, best_deals_items):
         "total_price",
         "total_price_plus_delivery",
         "availability",
+        "link",
     ]
     _create_workbook(filename, sheetname, headers, best_deals_items, keys)
 
@@ -74,6 +78,7 @@ def save_best_cumulative_deals(filename, sheetname, best_deals_items):
         "Free Delivery from",
         "Cumulative Price + Delivery",
         "Availability",
+        "See Offer",
     ]
     keys = [
         "seller",
@@ -84,6 +89,7 @@ def save_best_cumulative_deals(filename, sheetname, best_deals_items):
         "free_delivery",
         "cumulative_price_plus_delivery",
         "availability",
+        "link",
     ]
     _create_workbook(filename, sheetname, headers, best_deals_items, keys)
 
@@ -125,9 +131,17 @@ def _create_workbook(filename, sheetname, headers, items, keys):
         cell.style = header_style
 
     # Write the data
+    blue_font = Font(color=Color(rgb="0000CC"), underline="single")
     for row, item in enumerate(items, start=2):
         for i, key in enumerate(keys, start=1):
-            worksheet.cell(row=row, column=i, value=item[key])
+            if key == "link":
+                cell = worksheet.cell(
+                    row=row, column=i, value=f'=HYPERLINK("{item[key]}", "Link")'
+                )
+                cell.font = blue_font
+                cell.alignment = Alignment(horizontal="center")
+            else:
+                worksheet.cell(row=row, column=i, value=item[key])
 
     # Set number format for the numeric columns
     for col_num in range(3, len(headers) + 1):

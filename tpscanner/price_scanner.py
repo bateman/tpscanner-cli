@@ -101,6 +101,7 @@ def extract_prices_plus_shipping(html_content, quantity):
             availability = element.xpath(
                 'div[@class="item_price "]/div[@class="item_availability"]/span/@class'
             )[0]
+            offer_link = element.xpath('div[@class="item_actions"]/a/@href')[0]
             # convert item values to the appropriate data types
             item = _convert_data_types(
                 merchant,
@@ -111,6 +112,7 @@ def extract_prices_plus_shipping(html_content, quantity):
                 delivery_price,
                 free_delivery,
                 availability,
+                offer_link,
             )
             results.append(item)
     except Exception as e:
@@ -161,6 +163,7 @@ def extract_best_price_shipping_included(html_content, quantity):
         availability = element.xpath(
             'div[@class="item_price total_price_sorting"]/div[@class="item_availability"]/span/@class'
         )[0]
+        offer_link = element.xpath('div[@class="item_actions"]/a/@href')[0]
         # convert item values to the appropriate data types
         item = _convert_data_types(
             merchant,
@@ -171,6 +174,7 @@ def extract_best_price_shipping_included(html_content, quantity):
             delivery_price,
             free_delivery,
             availability,
+            offer_link,
         )
     except Exception as e:
         raise (f"Error extracting prices: {e}")
@@ -187,6 +191,7 @@ def _convert_data_types(
     delivery_price,
     free_delivery,
     availability,
+    offer_link,
 ):
     number_pattern = re.compile(r"\b\d+[,.]?\d*\b")
     item = {}
@@ -217,5 +222,6 @@ def _convert_data_types(
     else:
         item["total_price_plus_delivery"] = item["total_price"] + item["delivery_price"]
     item["availability"] = True if availability == "available" else False
+    item["link"] = "https://www.trovaprezzi.it" + offer_link
 
     return item
