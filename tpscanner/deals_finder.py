@@ -38,6 +38,7 @@ def find_best_deals(all_items):
                 if item["seller"] == seller:
                     best_deal_items["seller"] = item["seller"]
                     best_deal_items["seller_reviews"] = item["seller_reviews"]
+                    best_deal_items["seller_rating"] = item["seller_rating"]
                     best_deal_items["delivery_price"] = item["delivery_price"]
                     best_deal_items["free_delivery"] = item["free_delivery"]
                     best_deal_items["availability"] = item["availability"]

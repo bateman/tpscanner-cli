@@ -77,7 +77,12 @@ def extract_prices_plus_shipping(html_content, quantity):
             merchant_reviews = element.xpath(
                 'div[@class="item_info"]/div[@class="item_merchant"]/div[@class="wrap_merchant_reviews"]/a[@class="merchant_reviews"]'
             )[0].text.strip()
-            # merchant_rating = element.xpath('div[@class="item_info"]/div[@class="item_merchant"]/div[@class="wrap_merchant_reviews"]/')[0].text.strip() TODO
+            try:
+                merchant_rating = element.xpath(
+                    'div[@class="item_info"]/div[@class="item_merchant"]/div[@class="wrap_merchant_reviews"]/a[starts-with(@class, "merchant_reviews rating_image")]'
+                )[0].get("class")
+            except Exception:
+                merchant_rating = None
             price = element.xpath(
                 'div[@class="item_price "]/div[@class="item_basic_price"]'
             )[0].text.strip()
@@ -100,6 +105,7 @@ def extract_prices_plus_shipping(html_content, quantity):
             item = _convert_data_types(
                 merchant,
                 merchant_reviews,
+                merchant_rating,
                 price,
                 quantity,
                 delivery_price,
@@ -136,7 +142,12 @@ def extract_best_price_shipping_included(html_content, quantity):
         merchant_reviews = element.xpath(
             'div[@class="item_info"]/div[@class="item_merchant"]/div[@class="wrap_merchant_reviews"]/a[@class="merchant_reviews"]'
         )[0].text.strip()
-        # merchant_rating = element.xpath('div[@class="item_info"]/div[@class="item_merchant"]/div[@class="wrap_merchant_reviews"]/')[0].text.strip() TODO
+        try:
+            merchant_rating = element.xpath(
+                'div[@class="item_info"]/div[@class="item_merchant"]/div[@class="wrap_merchant_reviews"]/a[starts-with(@class, "merchant_reviews rating_image")]'
+            )[0].get("class")
+        except Exception:
+            merchant_rating = None
         price = element.xpath(
             'div[@class="item_price total_price_sorting"]/div[@class="item_basic_price"]'
         )[0].text.strip()
@@ -154,6 +165,7 @@ def extract_best_price_shipping_included(html_content, quantity):
         item = _convert_data_types(
             merchant,
             merchant_reviews,
+            merchant_rating,
             price,
             quantity,
             delivery_price,
@@ -169,6 +181,7 @@ def extract_best_price_shipping_included(html_content, quantity):
 def _convert_data_types(
     merchant,
     merchant_reviews,
+    merchant_rating,
     price,
     quantity,
     delivery_price,
@@ -182,6 +195,10 @@ def _convert_data_types(
     merchant_reviews = number_pattern.search(merchant_reviews).group()
     item["seller_reviews"] = int(merchant_reviews.replace(".", ""))
     price = number_pattern.search(price).group()
+    if merchant_rating:
+        merchant_rating = merchant_rating.split(" ")[2].replace("rate", "")
+        merchant_rating = int(merchant_rating) / 10.0
+    item["seller_rating"] = merchant_rating
     item["price"] = float(price.replace(",", "."))
     item["quantity"] = quantity
     if delivery_price:

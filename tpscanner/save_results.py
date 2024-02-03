@@ -12,6 +12,7 @@ def save_intermediate_results(filename, sheetname, items):
     headers = [
         "Seller",
         "Reviews",
+        "Rating",
         "Price",
         "Quantity",
         "Delivery Price",
@@ -23,6 +24,7 @@ def save_intermediate_results(filename, sheetname, items):
     keys = [
         "seller",
         "seller_reviews",
+        "seller_rating",
         "price",
         "quantity",
         "delivery_price",
@@ -38,6 +40,7 @@ def save_best_individual_deals(filename, sheetname, best_deals_items):
     headers = [
         "Seller",
         "Reviews",
+        "Rating",
         "Price",
         "Quantity",
         "Delivery Price",
@@ -49,6 +52,7 @@ def save_best_individual_deals(filename, sheetname, best_deals_items):
     keys = [
         "seller",
         "seller_reviews",
+        "seller_rating",
         "price",
         "quantity",
         "delivery_price",
@@ -64,6 +68,7 @@ def save_best_cumulative_deals(filename, sheetname, best_deals_items):
     headers = [
         "Seller",
         "Reviews",
+        "Rating",
         "Cumulative Price",
         "Delivery Price",
         "Free Delivery from",
@@ -73,6 +78,7 @@ def save_best_cumulative_deals(filename, sheetname, best_deals_items):
     keys = [
         "seller",
         "seller_reviews",
+        "seller_rating",
         "cumulative_price",
         "delivery_price",
         "free_delivery",
