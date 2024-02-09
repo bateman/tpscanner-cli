@@ -98,15 +98,16 @@ def main():
             "Best Individual Deals",
             best_individual_deals,
         )
-    logger.info("Finding the best cumulative deals.")
-    best_cumulative_deals = find_best_deals(all_items)
-    logger.info(f"Found {len(best_cumulative_deals)} best deals.")
-    logger.debug("Saving best cumulative deals.")
-    save_best_cumulative_deals(
-        f"results_{formatted_datetime}.xlsx",
-        "Best Cumulative Deals",
-        best_cumulative_deals,
-    )
+    if len(urls) > 1:
+        logger.info("Finding the best cumulative deals.")
+        best_cumulative_deals = find_best_deals(all_items)
+        logger.info(f"Found {len(best_cumulative_deals)} best deals.")
+        logger.debug("Saving best cumulative deals.")
+        save_best_cumulative_deals(
+            f"results_{formatted_datetime}.xlsx",
+            "Best Cumulative Deals",
+            best_cumulative_deals,
+        )
     logger.end("Done.")
 
 
