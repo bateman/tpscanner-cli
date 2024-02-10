@@ -6,13 +6,14 @@ DEFAULT_GOAL := help
 
 help:
 	@echo "help      - show this help"
+	@echo "run       - run the application"
 	@echo "format    - format code"
 	@echo "lint      - lint code"
-	@echo "clean     - remove temporary files"
 	@echo "precommit - run pre-commit checks"
-	@echo "run       - run the application"
+	@echo "clean     - remove temporary files"
 	@echo "install   - install the project dependencies"
 	@echo "update    - update the project dependencies"
+	@echo "export    - export the project dependencies"
 
 format:
 	ruff format
@@ -39,3 +40,7 @@ install:
 	poetry install
 	poetry lock --no-update
 	poetry run pre-commit install
+
+export: pyproject.toml
+	poetry export -f requirements.txt --output requirements.txt --without-hashes --without dev
+	poetry export -f requirements.txt --output requirements-dev.txt --without-hashes --with dev
