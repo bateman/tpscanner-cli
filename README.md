@@ -1,6 +1,6 @@
 # TPScanner
 
-TPScanner is a Python script that extracts prices of items from [Trovaprezzi.it](https://www.trovaprezzi.it/), sorts them, and saves the results in a spreadsheet. It also finds the best cumulative and individual deals.
+TPScanner is a Python script that extracts prices of items from [Trovaprezzi.it](https://www.trovaprezzi.it/), sorts them, displays and saves the results in a spreadsheet. It also finds the best cumulative and individual deals.
 
 ## Setup
 
@@ -24,6 +24,11 @@ poetry install
 ```bash
 poetry shell
 ```
+
+### External dependencies
+
+The script relies on [Selenium](https://www.selenium.dev/) web driver. Make sure that and [chromedriver](https://chromedriver.chromium.org/) and the Chrome/Chromium web browser are both installed before running the script. 
+
 ### Note
 
 If you don't have `poetry` installed (or don't want to install), you can use `pip` as follows:
@@ -36,7 +41,7 @@ For simple use, run `pip install -r requirements.txt`. For development purposes,
 To run the script, use the following command:
 
 ```bash
-python tpscanner.py -u url1 url2 ... | -f path/to/input/file.txt [-q n1 n2 ...] [-w n] [--headless] [--console=true|false]
+python tpscanner.py -u url1 url2 ... | -f path/to/input/file.txt [-q n1 n2 ...] [-w n] [--headless] [--console=true|false] [--excel=true|false]
 ```
 ```
 options:
@@ -48,7 +53,8 @@ options:
                           List of quantities to buy for each URL (in order)
   -w WAIT, --wait WAIT    Wait time between URLs requests
   --headless              Run in headless mode
-  -c=BOOL, --console=BOOL Whether to print results in the console (default true)
+  -c=BOOL, --console=BOOL Whether to print results to the console (default true)
+  -x=BOOL, --excel=BOOL   Whether to save results to Excel (default true)
 ```
 
 Alternatively, you can run the script as:
@@ -68,10 +74,24 @@ or
 make run ...
 ```
 
+### Note
+
+By default, running the script with browser in `headless` mode is disabled. In my tests, I've noticed that headless mode causes the server to display captchas, thus making the script scraping process to fail.
+
+
 ## Output
 
-The script outputs a spreadsheet named `results_<current_datetime>.xlsx` with the sorted list of items and the best cumulative deals.
+When the `--console` option is enabled, the script outputs to the console
+the results in form of tables.
 
+When the `--excel` option is enabled, the script creates a spreadsheet named `results_<current_datetime>.xlsx` with the sorted list of items and the best cumulative deals.
+
+## Configuration
+
+You can configure the script by editing the file `config/config.ini`. At the moment, you can configure:
+
+- `sleep_rate_limit = 5`: Too aggressive scraping will cause the server to show captchas. By default, the script will wait 5 secs. in between each item's offer scraping.
+- `output_dir = results`: The output directory where to store the Excel output file. By default, it is set to the `results/` subfolder in the current working directory.
 
 ## License
 
