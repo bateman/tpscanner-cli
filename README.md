@@ -24,23 +24,31 @@ poetry install
 ```bash
 poetry shell
 ```
+### Note
+
+If you don't have `poetry` installed (or don't want to install), you can use `pip` as follows:
+
+For simple use, run `pip install -r requirements.txt`. For development purposes, run `pip install -r requirements-dev.txt`.
+
 
 ## Usage
 
 To run the script, use the following command:
 
 ```bash
-python tpscanner.py -u url1 url2 ... | -f path/to/input/file.txt [-q n1 n2 ...] [-w n] [--headless]
-
+python tpscanner.py -u url1 url2 ... | -f path/to/input/file.txt [-q n1 n2 ...] [-w n] [--headless] [--console=true|false]
+```
+```
 options:
-  -h, --help            show this help message and exit
+  -h, --help              Show this help message and exit
   -u URL [URL ...], --url URL [URL ...]
-                        List of URLs to scan
-  -f FILE, --file FILE  File containing URLs to scan
-  -q QUANTITY [QUANTITY ...], --quantity QUANTITY [QUANTITY ...]
-                        List of quantities to buy for each URL (in order)
-  -w WAIT, --wait WAIT  Wait time between URLs requests
-  --headless            Run in headless mode
+                          List of URLs to scan
+  -f FILE, --file FILE    File containing URLs to scan
+  -q QUANTITY [QUANTITY ...], --quantity  QUANTITY [QUANTITY ...]
+                          List of quantities to buy for each URL (in order)
+  -w WAIT, --wait WAIT    Wait time between URLs requests
+  --headless              Run in headless mode
+  -c=BOOL, --console=BOOL Whether to print results in the console (default true)
 ```
 
 Alternatively, you can run the script as:

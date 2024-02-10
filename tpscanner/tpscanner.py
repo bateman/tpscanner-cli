@@ -52,7 +52,6 @@ def main():
     parser.add_argument(
         "-c",
         "--console",
-        action="store_true",
         default=True,
         help="Show output in console",
     )
