@@ -12,16 +12,20 @@ from tpscanner.deals_finder import (
     find_individual_best_deals,
     remove_unavailable_items,
 )
-from tpscanner.logger import logger
-from tpscanner.price_scanner import (
-    download_html,
-    extract_best_price_shipping_included,
-    extract_prices_plus_shipping,
-)
-from tpscanner.save_results import (
+from tpscanner.io.save_results import (
     save_best_cumulative_deals,
     save_best_individual_deals,
     save_intermediate_results,
+)
+from tpscanner.logger import logger
+from tpscanner.ui.console import (
+    display_best_cumulative_deals,
+    display_best_individual_deals,
+)
+from tpscanner.web.price_scanner import (
+    download_html,
+    extract_best_price_shipping_included,
+    extract_prices_plus_shipping,
 )
 
 
@@ -45,9 +49,12 @@ def main():
         "-w", "--wait", type=int, help="Wait time between URLs requests", required=False
     )
     parser.add_argument("--headless", action="store_true", help="Run in headless mode")
+    parser.add_argument(
+        "-c", "--console", action="store_true", help="Show output in console"
+    )
 
     # Parse command line arguments
-    level, urls, quantities, wait, headless = parse_command_line(parser)
+    level, urls, quantities, wait, headless, console_out = parse_command_line(parser)
 
     # Set the logging level
     logger.set_log_level(level)
@@ -62,7 +69,7 @@ def main():
     all_items = {}
     i = 0
     with Progress() as progress:
-        task = progress.add_task("Processing URLs.", total=len(urls))
+        task = progress.add_task("Processing items:", total=len(urls))
 
         for url in urls:
             if progress.finished:
@@ -98,6 +105,9 @@ def main():
             "Best Individual Deals",
             best_individual_deals,
         )
+        if console_out:
+            display_best_individual_deals(best_individual_deals)
+
     if len(urls) > 1:
         logger.info("Finding the best cumulative deals.")
         best_cumulative_deals = find_best_deals(all_items)
@@ -108,6 +118,9 @@ def main():
             "Best Cumulative Deals",
             best_cumulative_deals,
         )
+        if console_out:
+            display_best_cumulative_deals(best_cumulative_deals)
+
     logger.end("Done.")
 
 
@@ -147,7 +160,11 @@ def parse_command_line(parser):
         wait = 5
     # Whether to run in headless mode
     headless = args.headless
-    return level, urls, quantities, wait, headless
+    # Whether to show output in console
+    console_out = args.console
+    if not console_out:
+        console_out = False
+    return level, urls, quantities, wait, headless, console_out
 
 
 if __name__ == "__main__":

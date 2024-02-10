@@ -40,6 +40,7 @@ def save_intermediate_results(filename, sheetname, items):
 
 def save_best_individual_deals(filename, sheetname, best_deals_items):
     headers = [
+        "Product",
         "Seller",
         "Reviews",
         "Rating",
@@ -53,6 +54,7 @@ def save_best_individual_deals(filename, sheetname, best_deals_items):
         "See Offer",
     ]
     keys = [
+        "name",
         "seller",
         "seller_reviews",
         "seller_rating",

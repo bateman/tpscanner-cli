@@ -13,10 +13,11 @@ def remove_unavailable_items(all_items):
 
 def find_individual_best_deals(all_items):
     best_deals = []
-    for seller, items_list in all_items.items():
+    for item_name, items_list in all_items.items():
         for item in items_list:
             # if the seller indicates a free delivery threshold and the cumulative price is greater than or equal to the threshold
             if item["free_delivery"] and item["total_price"] >= item["free_delivery"]:
+                item["name"] = item_name
                 best_deals.append(item)
     return best_deals
 
@@ -33,9 +34,10 @@ def find_best_deals(all_items):
     best_deals = {}
     for seller in common_sellers:
         best_deal_items = {}
-        for _, items_list in all_items.items():
+        for item_name, items_list in all_items.items():
             for item in items_list:
                 if item["seller"] == seller:
+                    best_deal_items["name"] = item_name
                     best_deal_items["seller"] = item["seller"]
                     best_deal_items["seller_reviews"] = item["seller_reviews"]
                     best_deal_items["seller_rating"] = item["seller_rating"]
