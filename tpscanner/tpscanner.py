@@ -50,7 +50,11 @@ def main():
     )
     parser.add_argument("--headless", action="store_true", help="Run in headless mode")
     parser.add_argument(
-        "-c", "--console", action="store_true", help="Show output in console"
+        "-c",
+        "--console",
+        action="store_true",
+        default=True,
+        help="Show output in console",
     )
 
     # Parse command line arguments
@@ -162,8 +166,6 @@ def parse_command_line(parser):
     headless = args.headless
     # Whether to show output in console
     console_out = args.console
-    if not console_out:
-        console_out = False
     return level, urls, quantities, wait, headless, console_out
 
 
