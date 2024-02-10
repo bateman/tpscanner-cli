@@ -5,6 +5,7 @@ import os
 from openpyxl import Workbook, load_workbook
 from openpyxl.styles import Alignment, Color, Font, NamedStyle
 
+from tpscanner.config import config
 from tpscanner.logger import logger
 
 
@@ -97,6 +98,7 @@ def save_best_cumulative_deals(filename, sheetname, best_deals_items):
 
 
 def _create_workbook(filename, sheetname, headers, items, keys):
+    filename = os.path.join(config.output_dir, filename)
     # ensure that the sheet name is less than 31 characters
     if len(sheetname) > 31:
         sheetname = sheetname[:31]
