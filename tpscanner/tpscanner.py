@@ -55,9 +55,18 @@ def main():
         default=True,
         help="Show output in console",
     )
+    parser.add_argument("-x", "--excel", default=True, help="Save output to Excel file")
 
     # Parse command line arguments
-    level, urls, quantities, wait, headless, console_out = parse_command_line(parser)
+    (
+        level,
+        urls,
+        quantities,
+        wait,
+        headless,
+        console_out,
+        excel_out,
+    ) = parse_command_line(parser)
 
     # Set the logging level
     logger.set_log_level(level)
@@ -102,26 +111,30 @@ def main():
     best_individual_deals = find_individual_best_deals(all_items)
     logger.info(f"Found {len(best_individual_deals)} individual best deals.")
     if best_individual_deals:
-        logger.debug("Saving best individual deals.")
-        save_best_individual_deals(
-            f"results_{formatted_datetime}.xlsx",
-            "Best Individual Deals",
-            best_individual_deals,
-        )
+        if excel_out:
+            logger.debug("Saving best individual deals to excel.")
+            save_best_individual_deals(
+                f"results_{formatted_datetime}.xlsx",
+                "Best Individual Deals",
+                best_individual_deals,
+            )
         if console_out:
+            logger.debug("Displaying best individual deals in console.")
             display_best_individual_deals(best_individual_deals)
 
     if len(urls) > 1:
         logger.info("Finding the best cumulative deals.")
         best_cumulative_deals = find_best_deals(all_items)
         logger.info(f"Found {len(best_cumulative_deals)} best deals.")
-        logger.debug("Saving best cumulative deals.")
-        save_best_cumulative_deals(
-            f"results_{formatted_datetime}.xlsx",
-            "Best Cumulative Deals",
-            best_cumulative_deals,
-        )
+        if excel_out:
+            logger.debug("Saving best cumulative deals to excel.")
+            save_best_cumulative_deals(
+                f"results_{formatted_datetime}.xlsx",
+                "Best Cumulative Deals",
+                best_cumulative_deals,
+            )
         if console_out:
+            logger.debug("Displaying best cumulative deals in console.")
             display_best_cumulative_deals(best_cumulative_deals)
 
     logger.end("Done.")
@@ -165,7 +178,9 @@ def parse_command_line(parser):
     headless = args.headless
     # Whether to show output in console
     console_out = args.console
-    return level, urls, quantities, wait, headless, console_out
+    # Whether to save output to Excel file
+    excel_out = args.excel
+    return level, urls, quantities, wait, headless, console_out, excel_out
 
 
 if __name__ == "__main__":
