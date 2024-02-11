@@ -78,7 +78,7 @@ make run ARGS="..."
 
 ### Note
 
-By default, running the script with browser in `headless` mode is disabled. In my tests, I've noticed that headless mode causes the server to display captchas, thus making the script scraping process to fail.
+By default, running the script with browser in `headless` mode is disabled. In my tests, I've noticed that it causes the server to display captchas, thus making the script scraping process to fail.
 
 
 ## Output
