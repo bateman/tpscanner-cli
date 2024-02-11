@@ -2,6 +2,8 @@
 
 TPScanner is a Python script that extracts prices of items from [Trovaprezzi.it](https://www.trovaprezzi.it/), sorts them, displays and saves the results in a spreadsheet. It also finds the best cumulative and individual deals.
 
+![Intro Image](img/intro.gif)
+
 ## Setup
 
 Before you can run TPScanner, you need to set up your environment. This project uses [Poetry](https://python-poetry.org/) for dependency management. If you haven't installed Poetry yet, you can do so by following the instructions on their [official website](https://python-poetry.org/docs/#installation).
@@ -71,7 +73,7 @@ poetry run tpscanner ...
 or 
 
 ```bash
-make run ...
+make run ARGS="..."
 ```
 
 ### Note
