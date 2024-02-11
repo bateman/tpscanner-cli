@@ -28,8 +28,9 @@ clean:
 precommit: format lint
 	pre-commit run --all-files
 
+ARGS = ""
 run:
-	python -m tpscanner $@
+	python -m tpscanner $(ARGS)
 
 update:
 	poetry update
