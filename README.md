@@ -35,7 +35,10 @@ The script relies on [Selenium](https://www.selenium.dev/) web driver. Make sure
 
 If you don't have `poetry` installed (or don't want to install), you can use `pip` as follows:
 
-For simple use, run `pip install -r requirements.txt`. For development purposes, run `pip install -r requirements-dev.txt`.
+1. First, create a virual environment: `python -m venv .tps`.
+2. Activate it: `source .tps/bin/activate`.
+3. Install requirements: `pip install -r requirements.txt`.
+4. Optional, for development purposes only, run also: `pip install -r requirements-dev.txt`.
 
 
 ## Usage
