@@ -58,8 +58,12 @@ options:
                           List of quantities to buy for each URL (in order)
   -w WAIT, --wait WAIT    Wait time between URLs requests
   --headless              Run in headless mode
-  -c=BOOL, --console=BOOL Whether to print results to the console (default true)
-  -x=BOOL, --excel=BOOL   Whether to save results to Excel (default true)
+  -c=BOOL, --console=BOOL Whether to print results to the console 
+                          (default true)
+  -x=BOOL, --excel=BOOL   Whether to save results to Excel
+                          (default true)
+  -l=LEVEL, --level=LEVEL Set the desired logging level 
+                          (debug, info, warning, error, critical)
 ```
 
 Alternatively, you can run the script as:
