@@ -7,7 +7,7 @@ import time
 from rich.progress import Progress
 
 from tpscanner.config import config
-from tpscanner.deals_finder import (
+from tpscanner.core.deals_finder import (
     find_best_deals,
     find_individual_best_deals,
     remove_unavailable_items,
