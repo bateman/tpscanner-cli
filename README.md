@@ -43,7 +43,7 @@ For simple use, run `pip install -r requirements.txt`. For development purposes,
 To run the script, use the following command:
 
 ```bash
-python tpscanner.py -u url1 url2 ... | -f path/to/input/file.txt [-q n1 n2 ...] [-w n] [--headless] [--console=true|false] [--excel=true|false]
+python -m tpscanner -u url1 url2 ... | -f path/to/input/file.txt [-q n1 n2 ...] [-w n] [--headless] [--console=true|false] [--excel=true|false]
 ```
 ```
 options:
