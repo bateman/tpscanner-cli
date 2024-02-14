@@ -7,25 +7,25 @@ import time
 from rich.progress import Progress
 
 from tpscanner.config import config
-from tpscanner.core.deals_finder import (
+from tpscanner.core import (
     find_best_deals,
     find_individual_best_deals,
     remove_unavailable_items,
 )
-from tpscanner.io.save_results import (
+from tpscanner.io import (
     save_best_cumulative_deals,
     save_best_individual_deals,
     save_intermediate_results,
 )
 from tpscanner.logger import logger
-from tpscanner.ui.console import (
-    display_best_cumulative_deals,
-    display_best_individual_deals,
-)
-from tpscanner.web.price_scanner import (
+from tpscanner.scaper import (
     download_html,
     extract_best_price_shipping_included,
     extract_prices_plus_shipping,
+)
+from tpscanner.ui import (
+    display_best_cumulative_deals,
+    display_best_individual_deals,
 )
 
 
