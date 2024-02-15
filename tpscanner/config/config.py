@@ -1,4 +1,4 @@
-import configparser
+import json
 
 import pretty_errors
 
@@ -18,15 +18,19 @@ pretty_errors.configure(
 
 class Config:
     def __init__(self, filename):
-        self._config = configparser.ConfigParser()
         # ensure a file exists and is actually read
         if filename:
             try:
-                with open(filename, "r") as _:
-                    self._config.read(filename)
-                    for section in self._config.sections():
-                        for key, val in self._config.items(section):
-                            if val.isdigit():
+                with open(filename, "r") as f:
+                    self._config = json.load(f)
+                    for key, val in self._config.items():
+                        if isinstance(val, dict):
+                            for subkey, subval in val.items():
+                                if str(subval).isdigit():
+                                    subval = float(subval)
+                                setattr(self, subkey, subval)
+                        else:
+                            if str(val).isdigit():
                                 val = float(val)
                             setattr(self, key, val)
             except FileNotFoundError:
