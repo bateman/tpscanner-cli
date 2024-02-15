@@ -18,7 +18,7 @@ def main():
         level,
         urls,
         quantities,
-        filter_not_available,
+        includena,
         wait,
         headless,
         console_out,
@@ -42,7 +42,7 @@ def main():
     io.save_individual_deals(
         f"results_{formatted_datetime}.xlsx", scanner.individual_deals
     )
-    if filter_not_available:
+    if not includena:
         logger.info("Removing items marked as not available.")
         count = scanner.remove_unavailable_items()
         logger.info(f"{count} items removed.")
@@ -55,14 +55,14 @@ def main():
             logger.info("Saving best individual deals.")
             io.save_best_individual_deals(
                 f"results_{formatted_datetime}.xlsx",
-                "Best Individual Deals",
+                "Best individual deals",
                 scanner.best_individual_deals,
             )
         if console_out:
             logger.info("Displaying best individual deals in console.")
             console.display_best_individual_deals(
                 scanner.best_individual_deals,
-                f"Best Individual Deals ({len(scanner.best_individual_deals)})",
+                f"Individual deals unlocking free delivery ({len(scanner.best_individual_deals)})",
             )
 
     if len(urls) > 1:
@@ -73,14 +73,14 @@ def main():
             logger.info("Saving best cumulative deals.")
             io.save_best_cumulative_deals(
                 f"results_{formatted_datetime}.xlsx",
-                "Best Cumulative Deals",
+                "Best cumulative deals",
                 scanner.best_cumulative_deals,
             )
         if console_out:
             logger.info("Displaying best cumulative deals in console.")
             console.display_best_cumulative_deals(
                 scanner.best_cumulative_deals,
-                f"Best Cumulative Deals ({len(scanner.best_cumulative_deals)})",
+                f"Best cumulative deals ({len(scanner.best_cumulative_deals)})",
             )
 
     console.print(message="Done", level="end")
@@ -102,10 +102,10 @@ def setup_cli_parser():
         required=False,
     )
     parser.add_argument(
-        "-n",
-        "--notavailable",
-        default=True,
-        help="Remove items marked as not available",
+        "-i",
+        "--includena",
+        action="store_true",
+        help="Include items marked as not available",
     )
     parser.add_argument(
         "-w", "--wait", type=int, help="Wait time between URLs requests", required=False
@@ -114,10 +114,12 @@ def setup_cli_parser():
     parser.add_argument(
         "-c",
         "--console",
-        default=True,
+        action="store_true",
         help="Show output in console",
     )
-    parser.add_argument("-x", "--excel", default=True, help="Save output to Excel file")
+    parser.add_argument(
+        "-x", "--excel", action="store_true", help="Save output to Excel file"
+    )
     return parser
 
 
@@ -127,12 +129,15 @@ def parse_command_line(parser):
     # Retrieve the logging level
     level = args.level or ""
 
-    # Retrieve the list of URLs provided
+    # Retrieve the list of URLs provided from the command line
     urls = args.url
-    quantities = []
-    if not urls:
+    if urls:
+        # Retrieve also the list of quantities for each URL provided from the command line
+        quantities = args.quantity
+    else:
+        # Read the URLs and quantities from the file provided
+        quantities = []
         urls = []
-        # Read the URLs from the file provided
         with open(args.file, "r") as f:
             lines = f.read().splitlines()
         for line in lines:
@@ -145,32 +150,32 @@ def parse_command_line(parser):
                 quantities.append(q)
             else:
                 urls.append(line)
-
-    # Retrieve the list of quantities for each URL provided
-    quantities = args.quantity
+    # final check in case no quantities were provided in the file or command line
     if not quantities:
         quantities = [1] * len(urls)
 
-    # Whether to remove items marked as not available
-    filter_not_available = args.notavailable or True
+    # Whether to include items marked as not available
+    includena = args.includena
 
     # Retrieve the wait time between URLs requests
     wait = args.wait
     if not wait:
         wait = 5
+
     # Whether to run in headless mode
     headless = args.headless
-    if not headless:
-        headless = True
+
     # Whether to show output in console
     console_out = args.console
+
     # Whether to save output to Excel file
     excel_out = args.excel
+
     return (
         level.lower(),
         urls,
         quantities,
-        filter_not_available,
+        includena,
         wait,
         headless,
         console_out,

@@ -7,11 +7,7 @@ from rich.progress import Progress
 
 from tpscanner.config import config
 from tpscanner.logger import logger
-from tpscanner.scaper import (
-    download_html,
-    extract_best_price_shipping_included,
-    extract_prices_plus_shipping,
-)
+from tpscanner.scraper import Scraper
 
 
 class Scanner:
@@ -38,14 +34,16 @@ class Scanner:
                     break
                 quantity = int(self.quantities[i])
                 i += 1
+                scraper = Scraper(self.wait, self.headless)
                 # download prices plus shipping costs and best prices with shipping costs included (html2)
-                html_deals_plus_shipping, html_deals_shipping_inclued = download_html(
-                    url, self.wait, self.headless
-                )
-                name, items = extract_prices_plus_shipping(
+                (
+                    html_deals_plus_shipping,
+                    html_deals_shipping_inclued,
+                ) = scraper.download_html(url)
+                name, items = scraper.extract_prices_plus_shipping(
                     html_deals_plus_shipping, quantity
                 )
-                _, item = extract_best_price_shipping_included(
+                _, item = scraper.extract_best_price_shipping_included(
                     html_deals_shipping_inclued, quantity
                 )
                 if item not in items:
