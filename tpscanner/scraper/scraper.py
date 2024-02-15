@@ -51,12 +51,12 @@ class Scraper:
         #     except Exception:
         #         # no more offers (the button is not present anymore)
         #         break
-        html_content = self.driver.page_source
+        html_content_plus_shipping = self.driver.page_source
         WebDriverWait(self.driver, self.wait).until(
             EC.element_to_be_clickable((By.CSS_SELECTOR, ".include_shipping"))
         ).click()
-        html_content_shipping = self.driver.page_source
-        return html_content, html_content_shipping
+        html_content_including_hipping = self.driver.page_source
+        return html_content_plus_shipping, html_content_including_hipping
 
     def extract_prices_plus_shipping(self, html_content, quantity):
         results = []
