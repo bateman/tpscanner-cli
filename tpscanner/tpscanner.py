@@ -160,6 +160,8 @@ def parse_command_line(parser):
         wait = 5
     # Whether to run in headless mode
     headless = args.headless
+    if not headless:
+        headless = True
     # Whether to show output in console
     console_out = args.console
     # Whether to save output to Excel file
