@@ -19,7 +19,7 @@ cd tpscanner
 
 2. Install the project dependencies:
 ```bash
-poetry install
+make install
 ```
 
 3. Activate the virtual environment:
