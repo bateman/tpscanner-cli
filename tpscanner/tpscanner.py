@@ -125,7 +125,7 @@ def parse_command_line(parser):
     args = parser.parse_args()
 
     # Retrieve the logging level
-    level = args.level or "info"
+    level = args.level or ""
 
     # Retrieve the list of URLs provided
     urls = args.url
