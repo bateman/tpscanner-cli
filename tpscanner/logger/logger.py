@@ -58,8 +58,10 @@ class Logger(object):
             level = logging.ERROR
         elif level == "critical":
             level = logging.CRITICAL
+        elif level == "none":
+            level = logging.CRITICAL + 1
         else:
-            level = logging.INFO
+            level = logging.CRITICAL + 1
 
         logging.basicConfig(
             level=level,

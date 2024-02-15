@@ -9,7 +9,7 @@ from tpscanner.config import config
 from tpscanner.logger import logger
 
 
-def save_intermediate_results(filename, sheetname, items):
+def save_individual_deals(filename, individual_deals_items):
     headers = [
         "Seller",
         "Reviews",
@@ -36,7 +36,9 @@ def save_intermediate_results(filename, sheetname, items):
         "availability",
         "link",
     ]
-    _create_workbook(filename, sheetname, headers, items, keys)
+    for name, items in individual_deals_items.items():
+        logger.info(f"Saving deals for `{name}`.")
+        _create_workbook(filename, name, headers, items, keys)
 
 
 def save_best_individual_deals(filename, sheetname, best_deals_items):
@@ -104,7 +106,7 @@ def _create_workbook(filename, sheetname, headers, items, keys):
         sheetname = sheetname[:31]
     # Check if the file already exists
     if os.path.exists(filename):
-        logger.debug(f"File `{filename}` already exists. Opening it...")
+        logger.info(f"File `{filename}` already exists. Opening it...")
         # If the file exists, open it
         workbook = load_workbook(filename)
         # create a new worksheet
@@ -112,7 +114,7 @@ def _create_workbook(filename, sheetname, headers, items, keys):
         # find existing named style
         header_style = workbook._named_styles["header_style"]
     else:
-        logger.debug(f"File `{filename}` does not exist. Creating it...")
+        logger.info(f"File `{filename}` does not exist. Creating it...")
         # else create a workbook
         workbook = Workbook()
         # Use the active sheet as the new sheet

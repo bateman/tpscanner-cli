@@ -46,7 +46,7 @@ If you don't have `poetry` installed (or don't want to install), you can use `pi
 To run the script, use the following command:
 
 ```bash
-python -m tpscanner -u url1 url2 ... | -f path/to/input/file.txt [-q n1 n2 ...] [-w n] [--headless] [--console=true|false] [--excel=true|false]
+python -m tpscanner -u url1 url2 ... | -f path/to/input/file.txt [-q n1 n2 ...] [-n=true|false] [-w n] [--headless] [--console=true|false] [--excel=true|false]
 ```
 ```
 options:
@@ -56,6 +56,8 @@ options:
   -f FILE, --file FILE    File containing URLs to scan
   -q QUANTITY [QUANTITY ...], --quantity  QUANTITY [QUANTITY ...]
                           List of quantities to buy for each URL (in order)
+  -n NOTAVAILABLE, --notavailable NOTAVAILABLE
+                          Remove items marked as not available
   -w WAIT, --wait WAIT    Wait time between URLs requests
   --headless              Run in headless mode
   -c=BOOL, --console=BOOL Whether to print results to the console 
@@ -63,7 +65,7 @@ options:
   -x=BOOL, --excel=BOOL   Whether to save results to Excel
                           (default true)
   -l=LEVEL, --level=LEVEL Set the desired logging level 
-                          (debug, info, warning, error, critical)
+                          (none, debug, info, warning, error, critical)
 ```
 
 Alternatively, you can run the script as:
