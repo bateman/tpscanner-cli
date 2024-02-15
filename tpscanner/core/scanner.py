@@ -29,12 +29,12 @@ class Scanner:
         with Progress() as progress:
             task = progress.add_task("Processing items:", total=len(self.urls))
 
+            scraper = Scraper(self.wait, self.headless)
             for url in self.urls:
                 if progress.finished:
                     break
                 quantity = int(self.quantities[i])
                 i += 1
-                scraper = Scraper(self.wait, self.headless)
                 # download prices plus shipping costs and best prices with shipping costs included (html2)
                 (
                     html_deals_plus_shipping,
