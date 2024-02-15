@@ -9,6 +9,8 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 
+from tpscanner.config import config
+
 
 def download_html(url, wait=5, headless=True):
     html_content = None
@@ -17,6 +19,14 @@ def download_html(url, wait=5, headless=True):
         chrome_options = webdriver.ChromeOptions()
         if headless:
             chrome_options.add_argument("--headless")
+            chrome_options.add_argument("--no-sandbox")
+            chrome_options.add_argument("--disable-dev-shm-usage")
+            chrome_options.add_argument("--disable-blink-features=AutomationControlled")
+            chrome_options.add_experimental_option(
+                "excludeSwitches", ["enable-automation"]
+            )
+            chrome_options.add_experimental_option("useAutomationExtension", False)
+            chrome_options.add_argument(f"user-agent={config.user_agent}")
 
         # Use webdriver_manager to automatically download and manage ChromeDriver
         with webdriver.Chrome(
