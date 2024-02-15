@@ -60,6 +60,7 @@ options:
                           Remove items marked as not available
   -w WAIT, --wait WAIT    Wait time between URLs requests
   --headless              Run in headless mode
+                          (default true)
   -c=BOOL, --console=BOOL Whether to print results to the console 
                           (default true)
   -x=BOOL, --excel=BOOL   Whether to save results to Excel
@@ -82,7 +83,7 @@ make run ARGS="..."
 
 ### Note
 
-By default, running the script with browser in `headless` mode is disabled. In my tests, I've noticed that it causes the server to display captchas, thus making the script scraping process to fail.
+By default, the script runs with browser in `headless` by default. In my tests, however, I've noticed that it may sometime cause the server to display captchas, thus making the script scraping process to fail.
 
 
 ## Output
