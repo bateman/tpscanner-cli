@@ -71,11 +71,6 @@ options:
 Alternatively, you can run the script as:
 
 ```bash
-python -m tpscanner ...
-```
-
-Alternatively:
-```bash
 poetry run tpscanner ...
 ```
 
