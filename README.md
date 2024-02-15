@@ -46,7 +46,7 @@ If you don't have `poetry` installed (or don't want to install), you can use `pi
 To run the script, use the following command:
 
 ```bash
-python -m tpscanner -u url1 url2 ... | -f path/to/input/file.txt [-q n1 n2 ...] [-n=true|false] [-w n] [--headless] [--console=true|false] [--excel=true|false]
+python -m tpscanner -u url1 url2 ... | -f path/to/input/file.txt [-q n1 n2 ...] [--includena] [-w n] [--headless] [--console] [--excel]
 ```
 ```
 options:
@@ -56,15 +56,11 @@ options:
   -f FILE, --file FILE    File containing URLs to scan
   -q QUANTITY [QUANTITY ...], --quantity  QUANTITY [QUANTITY ...]
                           List of quantities to buy for each URL (in order)
-  -n NOTAVAILABLE, --notavailable NOTAVAILABLE
-                          Remove items marked as not available
+  -i , --includena        Whether to include items marked as not available
   -w WAIT, --wait WAIT    Wait time between URLs requests
   --headless              Run in headless mode
-                          (default true)
-  -c=BOOL, --console=BOOL Whether to print results to the console 
-                          (default true)
-  -x=BOOL, --excel=BOOL   Whether to save results to Excel
-                          (default true)
+  -c, --console           Whether to print results to the console 
+  -x, --excel             Whether to save results to Excel
   -l=LEVEL, --level=LEVEL Set the desired logging level 
                           (none, debug, info, warning, error, critical)
 ```
@@ -83,7 +79,7 @@ make run ARGS="..."
 
 ### Note
 
-By default, the script runs with browser in `headless` by default. In my tests, however, I've noticed that it may sometime cause the server to display captchas, thus making the script scraping process to fail.
+The script can runs with browser in `headless` mode. In my tests, however, I've noticed that it may sometime cause the server to display captchas, thus making the script scraping process to fail.
 
 
 ## Output
