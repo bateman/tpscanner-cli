@@ -61,7 +61,7 @@ class Logger(object):
         elif level == "none":
             level = logging.CRITICAL + 1
         else:
-            level = logging.CRITICAL + 1
+            level = logging.WARNING
 
         logging.basicConfig(
             level=level,
