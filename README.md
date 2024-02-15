@@ -91,10 +91,11 @@ When the `--excel` option is enabled, the script creates a spreadsheet named `re
 
 ## Configuration
 
-You can configure the script by editing the file `config/config.ini`. At the moment, you can configure:
+You can configure the script by editing the file `config/config.json`. At the moment, you can configure:
 
-- `sleep_rate_limit = 5`: Too aggressive scraping will cause the server to show captchas. By default, the script will wait 5 secs. in between each item's offer scraping.
+- `sleep_rate_limit = 2`: Too aggressive scraping will cause the server to show captchas. By default, the script will wait 2 secs. in between each item's offer scraping.
 - `output_dir = results`: The output directory where to store the Excel output file. By default, it is set to the `results/` subfolder in the current working directory.
+- `user_agents = []`: A list of browser User-Agent strings to cycle through when running in headless mode.
 
 ## License
 
