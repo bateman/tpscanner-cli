@@ -14,6 +14,7 @@ help:
 	@echo "install   - install the project dependencies"
 	@echo "update    - update the project dependencies"
 	@echo "export    - export the project dependencies"
+	@echo "build     - build the project release"
 
 format:
 	ruff format
@@ -45,3 +46,6 @@ install:
 export: pyproject.toml
 	poetry export -f requirements.txt --output requirements.txt --without-hashes --without dev
 	poetry export -f requirements.txt --output requirements-dev.txt --without-hashes --with dev
+
+build: pyproject.toml
+	poetry build
