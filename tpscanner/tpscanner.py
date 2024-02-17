@@ -8,6 +8,18 @@ from tpscanner.core import Scanner
 from tpscanner.logger import logger
 from tpscanner.ui import Console
 
+banner = """
+:.........................................................................:
+:.........................................................................:
+:..██████████████╗███████╗██████╗█████╗███╗...█████╗...███████████████╗...:
+:..╚══██╔══██╔══████╔════██╔════██╔══██████╗..██████╗..████╔════██╔══██╗..:
+:.....██║..██████╔█████████║....█████████╔██╗.████╔██╗.███████╗.██████╔╝..:
+:.....██║..██╔═══╝╚════████║....██╔══████║╚██╗████║╚██╗████╔══╝.██╔══██╗..:
+:.....██║..██║....███████╚████████║..████║.╚██████║.╚█████████████║..██║..:
+:.....╚═╝..╚═╝....╚══════╝╚═════╚═╝..╚═╚═╝..╚═══╚═╝..╚═══╚══════╚═╝..╚═╝..:
+:.........................................................................:
+"""
+
 
 def main():
     # Set up the command line parser
@@ -34,6 +46,7 @@ def main():
 
     console = Console()
     # Start the scanner
+    console.print(message=banner, level="banner")
     console.print(message="TrovaPrezzi Scanner", level="start")
     scanner = Scanner(level, urls, quantities, wait, headless, console_out, excel_out)
     logger.info("Scanning the deals for each item.")
