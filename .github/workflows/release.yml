@@ -33,5 +33,5 @@ jobs:
           name: 'Release ${{ steps.tag.outputs.version }}'
           generate_release_notes: null
           files: |
-            "./dist/${{ steps.reponame.outputs.name }}-${{ steps.tag.outputs.version }}.tar.gz"
+            ./dist/${{ steps.reponame.outputs.name }}-${{ steps.tag.outputs.version }}.tar.gz
 
