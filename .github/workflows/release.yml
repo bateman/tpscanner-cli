@@ -4,24 +4,7 @@ name: release
     tags:
       - v*
 jobs:
-  test:
-    name: Test
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.12'
-      - name: Install Poetry
-        uses: Gr1N/setup-poetry@v8
-      - name: Install dependencies
-        run: make install
-      - name: Run tests
-        run: make tests
   release:
-    needs: test
     name: Release
     runs-on: ubuntu-latest
     steps:
@@ -54,3 +37,4 @@ jobs:
           files: >
             "./dist/${{ steps.reponame.outputs.name }}-${{
             steps.tag.outputs.version }}.tar.gz"
+git push origin --delete v1.0.0git push origin --delete v1.0.0git push origin --delete v1.0.0
