@@ -26,10 +26,12 @@ class Scraper:
         chrome_options = None
         if self.headless:
             chrome_options = uc.ChromeOptions()
+            chrome_options.add_argument(
+                f"user-agent={random.choice(config.user_agents)}"
+            )
             # chrome_options.add_experimental_option(
             #    "excludeSwitches", ["enable-automation"]
             # )
-            # chrome_options.add_experimental_option("useAutomationExtension", False)
             # chrome_options.add_argument("--no-sandbox")
             # chrome_options.add_argument("--disable-dev-shm-usage")
             # chrome_options.add_argument("--disable-blink-features=AutomationControlled")
@@ -38,9 +40,9 @@ class Scraper:
             # options.add_experimental_option("prefs", {"profile.managed_default_content_settings.javascript": 2})
         else:
             chrome_options = webdriver.ChromeOptions()
+            chrome_options.add_experimental_option("useAutomationExtension", False)
         chrome_options.add_argument("--start-maximized")
         chrome_options.add_argument("--ignore-certificate-errors")
-        chrome_options.add_argument(f"user-agent={random.choice(config.user_agents)}")
 
         driver = None
         if self.headless:
@@ -49,7 +51,7 @@ class Scraper:
                 headless=self.headless,
                 use_subprocess=False,
                 options=chrome_options,
-                version_main=120,
+                version_main=config.chrome_version,
             )
         else:
             logger.info("Using regular chromedriver for non-headless mode.")
