@@ -1,6 +1,4 @@
-# TPScanner
 
-TPScanner is a Python script that extracts prices of items from [Trovaprezzi.it](https://www.trovaprezzi.it/), sorts them, displays and saves the results in a spreadsheet. It also finds the best cumulative and individual deals.
 
 ```
  _________  ____                          
@@ -8,6 +6,9 @@ TPScanner is a Python script that extracts prices of items from [Trovaprezzi.it]
  / / / ___/\ \/ __/ _ `/ _ \/ _ \/ -_) __/
 /_/ /_/  /___/\__/\_,_/_//_/_//_/\__/_/   
 ```
+# 
+
+TPScanner is a Python script that extracts prices of items from [Trovaprezzi.it](https://www.trovaprezzi.it/), sorts them, displays and saves the results in a spreadsheet. It also finds the best cumulative and individual deals.
 
 ![Intro Image](img/intro.gif)
 
