@@ -37,7 +37,7 @@ poetry shell
 
 ### External dependencies
 
-The script relies on [Selenium](https://www.selenium.dev/) web driver. Make sure that and [chromedriver](https://chromedriver.chromium.org/) and the Chrome/Chromium web browser are both installed before running the script. 
+The script relies on [Selenium](https://www.selenium.dev/) web driver. Make sure that the Chrome/Chromium web browser is installed before running the script. 
 
 ### Note
 
