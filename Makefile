@@ -50,4 +50,3 @@ export: pyproject.toml
 
 build: pyproject.toml
 	poetry build
-	ls ./dist/*.tar.gz
