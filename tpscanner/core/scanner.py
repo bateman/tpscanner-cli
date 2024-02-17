@@ -1,13 +1,13 @@
 # scanner.py
 
 import datetime
-import time
 
 from rich.progress import Progress
 
 from tpscanner.config import config
 from tpscanner.logger import logger
 from tpscanner.scraper import Scraper
+from tpscanner.utils import sleep
 
 
 class Scanner:
@@ -53,7 +53,7 @@ class Scanner:
                 self.individual_deals[name] = items
                 logger.info(f"Found {len(items)} deals for `{name}`.")
                 # wait seconds before next URL to avoid being blocked and captcha
-                time.sleep(config.sleep_rate_limit)
+                sleep(config.sleep_rate_limit)
                 progress.update(task, advance=1)
 
     def remove_unavailable_items(self):
