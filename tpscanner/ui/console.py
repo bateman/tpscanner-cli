@@ -14,6 +14,7 @@ class Console:
     def __init__(self):
         theme = Theme(
             {
+                "banner": "bold green",
                 "start": "bold magenta",
                 "end": "bold magenta",
                 "debug": "bold cyan",
@@ -51,7 +52,9 @@ class Console:
         ]
 
     def print(self, message, level="info"):
-        if level == "start" or level == "end":
+        if level == "banner":
+            self.console.print(message, style="bold green")
+        elif level == "start" or level == "end":
             print("\n")
             self.console.print(Rule(message), style="bold magenta")
             print("\n")
