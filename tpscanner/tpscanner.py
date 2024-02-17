@@ -184,6 +184,11 @@ def parse_command_line(parser):
     # Whether to save output to Excel file
     excel_out = args.excel
 
+    if not (args.console or args.excel):
+        parser.error(
+            "No output format selected, add -c/--console or -x/--excel or both."
+        )
+
     return (
         level.lower(),
         urls,
