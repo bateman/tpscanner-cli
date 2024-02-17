@@ -29,8 +29,8 @@ class Scanner:
         with Progress() as progress:
             task = progress.add_task("Processing items:", total=len(self.urls))
 
-            scraper = Scraper(self.wait, self.headless)
             for url in self.urls:
+                scraper = Scraper(self.wait, self.headless)
                 if progress.finished:
                     break
                 quantity = int(self.quantities[i])
