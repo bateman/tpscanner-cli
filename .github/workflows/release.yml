@@ -37,4 +37,3 @@ jobs:
           files: >
             "./dist/${{ steps.reponame.outputs.name }}-${{
             steps.tag.outputs.version }}.tar.gz"
-git push origin --delete v1.0.0git push origin --delete v1.0.0git push origin --delete v1.0.0
