@@ -1,7 +1,9 @@
 # pricescanner.py
 
+import random
 import re
 
+import undetected_chromedriver as uc
 from lxml import html
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service as ChromeService
@@ -11,6 +13,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 
 from tpscanner.config import config
 from tpscanner.logger import logger
+from tpscanner.utils import sleep
 
 
 class Scraper:
@@ -20,27 +23,53 @@ class Scraper:
         self.driver = self._setup_driver()
 
     def _setup_driver(self):
-        chrome_options = webdriver.ChromeOptions()
+        chrome_options = None
         if self.headless:
-            chrome_options.add_argument("--headless")
-            chrome_options.add_argument("--no-sandbox")
-            chrome_options.add_argument("--disable-dev-shm-usage")
-            chrome_options.add_argument("--disable-blink-features=AutomationControlled")
-            chrome_options.add_experimental_option(
-                "excludeSwitches", ["enable-automation"]
+            chrome_options = uc.ChromeOptions()
+            # chrome_options.add_experimental_option(
+            #    "excludeSwitches", ["enable-automation"]
+            # )
+            # chrome_options.add_experimental_option("useAutomationExtension", False)
+            # chrome_options.add_argument("--no-sandbox")
+            # chrome_options.add_argument("--disable-dev-shm-usage")
+            # chrome_options.add_argument("--disable-blink-features=AutomationControlled")
+            # chrome_options.add_argument("--disable-software-rasterizer")
+            # chrome_options.add_argument("--no-first-run")
+            # options.add_experimental_option("prefs", {"profile.managed_default_content_settings.javascript": 2})
+        else:
+            chrome_options = webdriver.ChromeOptions()
+        chrome_options.add_argument("--start-maximized")
+        chrome_options.add_argument("--ignore-certificate-errors")
+        chrome_options.add_argument(f"user-agent={random.choice(config.user_agents)}")
+
+        driver = None
+        if self.headless:
+            logger.info("Using undetected_chromedriver for headless mode.")
+            driver = uc.Chrome(
+                headless=self.headless,
+                use_subprocess=False,
+                options=chrome_options,
+                version_main=120,
             )
-            chrome_options.add_experimental_option("useAutomationExtension", False)
-            chrome_options.add_argument(f"user-agent={config.user_agent}")
-        return webdriver.Chrome(service=ChromeService(), options=chrome_options)
+        else:
+            logger.info("Using regular chromedriver for non-headless mode.")
+            driver = webdriver.Chrome(service=ChromeService(), options=chrome_options)
+        return driver
 
     def _navigate_to_url(self, url):
-        self.driver.maximize_window()
         self.driver.get(url)
-        WebDriverWait(self.driver, self.wait).until(
-            EC.element_to_be_clickable(
-                (By.CSS_SELECTOR, ".iubenda-cs-accept-btn.iubenda-cs-btn-primary")
-            )
-        ).click()
+        # wait seconds before next URL to avoid being blocked and captcha
+        sleep(config.sleep_rate_limit)
+        try:
+            WebDriverWait(self.driver, self.wait).until(
+                EC.element_to_be_clickable(
+                    (By.CSS_SELECTOR, ".iubenda-cs-accept-btn.iubenda-cs-btn-primary")
+                )
+            ).click()
+        except Exception:
+            logger.critical("An error occurred while loading the page.")
+            self.driver.save_screenshot("error.png")
+            raise
 
     def download_html(self, url):
         self._navigate_to_url(url)
@@ -52,9 +81,16 @@ class Scraper:
         #         # no more offers (the button is not present anymore)
         #         break
         html_content_plus_shipping = self.driver.page_source
-        WebDriverWait(self.driver, self.wait).until(
-            EC.element_to_be_clickable((By.CSS_SELECTOR, ".include_shipping"))
-        ).click()
+        # wait seconds before next URL to avoid being blocked and captcha
+        sleep(config.sleep_rate_limit)
+        try:
+            WebDriverWait(self.driver, self.wait).until(
+                EC.element_to_be_clickable((By.CSS_SELECTOR, ".include_shipping"))
+            ).click()
+        except Exception:
+            logger.critical("An error occurred while scraping the page.")
+            self.driver.save_screenshot("error.png")
+            raise
         html_content_including_hipping = self.driver.page_source
         return html_content_plus_shipping, html_content_including_hipping
 
@@ -123,11 +159,12 @@ class Scraper:
         except Exception as e:
             message = (
                 "Error during scraping. "
-                + "Consider removin --headless option and try again."
+                + "Consider removing --headless option and try again."
                 if self.headless
                 else ""
             )
             logger.critical(message)
+            self.driver.save_screenshot("error.png")
             raise e
 
         return item_name, results
@@ -190,11 +227,12 @@ class Scraper:
         except Exception as e:
             message = (
                 "Error during scraping. "
-                + "Consider removin --headless option and try again."
+                + "Consider removing --headless option and try again."
                 if self.headless
                 else ""
             )
             logger.critical(message)
+            self.driver.save_screenshot("error.png")
             raise e
 
         return item_name, item
