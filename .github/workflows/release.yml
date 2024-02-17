@@ -1,55 +1,56 @@
 name: release
-
-on:
-    workflow_dispatch:
-    push:
-        tags:
-            - 'v*'
-
+'on':
+  push:
+    tags:
+      - v*
 jobs:
-    test:
-        name: Test
-        runs-on: ubuntu-latest
-        steps:
-        - name: Checkout
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
         uses: actions/checkout@v4
-        - name: Set up Python
+      - name: Set up Python
         uses: actions/setup-python@v5
         with:
-            python-version: '3.12'
-        - name: Install Poetry
+          python-version: '3.12'
+      - name: Install Poetry
         uses: Gr1N/setup-poetry@v8
-        - name: Install dependencies
+      - name: Install dependencies
         run: make install
-        - name: Run tests
+      - name: Run tests
         run: make tests
-    release:
-        needs: test
-        name: Release
-        runs-on: ubuntu-latest
-        steps:
-        - name: Checkout
+  release:
+    needs: test
+    name: Release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
         uses: actions/checkout@v4
-        - name: Set up Python
+      - name: Set up Python
         uses: actions/setup-python@v5
         with:
-            python-version: '3.12'
-        - name: Install Poetry
+          python-version: '3.12'
+      - name: Install Poetry
         uses: Gr1N/setup-poetry@v8
-        - name: Build package
+      - name: Build package
         run: make build
-        - name: Retrieve tag
+      - name: Retrieve tag
         id: tag
-        run: echo "version=${GITHUB_REF/refs\/tags\//}" >> $GITHUB_OUTPUT
+        run: 'echo "version=${GITHUB_REF/refs\/tags\//}" >> $GITHUB_OUTPUT'
+      - name: Retrieve repo name
         id: reponame
-        run: echo "name=$(echo ${{ github.repository }} | cut -d '/' -f 2)" >> $GITHUB_OUTPUT
-        - name: Create Release
+        run: >-
+          echo "name=$(echo ${{ github.repository }} | cut -d '/' -f 2)" >>
+          $GITHUB_OUTPUT
+      - name: Create Release
         id: create_release
         uses: softprops/action-gh-release@v1
         env:
-            GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+          GITHUB_TOKEN: '${{ secrets.RELEASE_TOKEN }}'
         with:
-            name: Release ${{ steps.tag.outputs.version }}
-            generate_release_notes:
-            files: |
-            "./dist/${{ steps.reponame.outputs.name }}-${{ steps.tag.outputs.version }}.tar.gz"
+          name: 'Release ${{ steps.tag.outputs.version }}'
+          generate_release_notes: null
+          files: >
+            "./dist/${{ steps.reponame.outputs.name }}-${{
+            steps.tag.outputs.version }}.tar.gz"
