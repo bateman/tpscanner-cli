@@ -37,7 +37,7 @@ poetry shell
 
 ### External dependencies
 
-The script relies on [Selenium](https://www.selenium.dev/) web driver. Make sure that and [chromedriver](https://chromedriver.chromium.org/) and the Chrome/Chromium web browser are both installed before running the script. 
+The script relies on [Selenium](https://www.selenium.dev/) web driver. Make sure that the Chrome/Chromium web browser is installed before running the script. 
 
 ### Note
 
@@ -87,7 +87,7 @@ make run ARGS="..."
 
 ### Note
 
-The script can runs with browser in `headless` mode. In my tests, however, I've noticed that it may sometime cause the server to display captchas, thus making the script scraping process to fail.
+The script can run with the browser in `headless` mode. In my tests, however, I've noticed that it often causes the server to display captchas, thus making the script scraping process to fail.
 
 
 ## Output
