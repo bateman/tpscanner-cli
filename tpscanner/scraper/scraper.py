@@ -104,10 +104,13 @@ class Scraper:
 
             # Use XPath to access the sellers and items
             item_name = tree.xpath(
-                '//div[@class="name_and_rating"]/h1/strong/text() | //div[@class="name_and_rating"]/h1/text()[normalize-space()]'
+                '//div[@class="name_and_rating"]/h1/strong/text() | //div[@class="name_and_rating"]/h1/text()[normalize-space()] | //div[@class="search_results_heading"]/h1/strong/text()'
             )
             item_name = [item.strip() for item in item_name]
             item_name = " ".join(item_name)
+            if not item_name:
+                logger.error("No item name found, going with default.")
+                raise Exception("No item name found.")
 
             elements = tree.xpath('//*[@id="listing"]/ul/li')
             for element in elements:

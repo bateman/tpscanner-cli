@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "tpscanner"
-version = "1.0.1"
+version = "1.0.2"
 description = ""
 authors = ["Fabio Calefato <@bateman>"]
 license = "MIT License"
