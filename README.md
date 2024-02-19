@@ -41,7 +41,7 @@ The script relies on [Selenium](https://www.selenium.dev/) web driver. Make sure
 
 ### Note
 
-If you don't have `poetry` installed (or don't want to install), you can use `pip` as follows:
+If you don't have `poetry` installed (or don't want to install it), you can use `pip` as follows:
 
 1. First, create a virual environment: `python -m venv .tps`.
 2. Activate it: `source .tps/bin/activate`.
