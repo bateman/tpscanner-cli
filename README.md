@@ -65,7 +65,7 @@ options:
   -q QUANTITY [QUANTITY ...], --quantity  QUANTITY [QUANTITY ...]
                           List of quantities to buy for each URL (in order)
   -i , --includena        Whether to include items marked as not available
-  -w WAIT, --wait WAIT    Wait time between URLs requests
+  -w WAIT, --wait WAIT    Wait time between URLs requests (default 5 sec.)
   --headless              Run in headless mode
   -c, --console           Whether to print results to the console 
   -x, --excel             Whether to save results to Excel
