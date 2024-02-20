@@ -41,7 +41,7 @@ The script relies on [Selenium](https://www.selenium.dev/) web driver. Make sure
 
 ### Note
 
-If you don't have `poetry` installed (or don't want to install), you can use `pip` as follows:
+If you don't have `poetry` installed (or don't want to install it), you can use `pip` as follows:
 
 1. First, create a virual environment: `python -m venv .tps`.
 2. Activate it: `source .tps/bin/activate`.
@@ -65,7 +65,7 @@ options:
   -q QUANTITY [QUANTITY ...], --quantity  QUANTITY [QUANTITY ...]
                           List of quantities to buy for each URL (in order)
   -i , --includena        Whether to include items marked as not available
-  -w WAIT, --wait WAIT    Wait time between URLs requests
+  -w WAIT, --wait WAIT    Wait time between URLs requests (default 5 sec.)
   --headless              Run in headless mode
   -c, --console           Whether to print results to the console 
   -x, --excel             Whether to save results to Excel
