@@ -213,9 +213,12 @@ class Scraper:
                 )[0].text.strip()
             except Exception:
                 free_delivery = None
-            availability = element.xpath(
-                'div[@class="item_price total_price_sorting"]/div[@class="item_availability"]/span/@class'
-            )[0]
+            try:
+                availability = element.xpath(
+                    'div[@class="item_price total_price_sorting"]/div[@class="item_availability"]/span/@class'
+                )[0]
+            except Exception:
+                availability = "not available"
             offer_link = element.xpath('div[@class="item_actions"]/a/@href')[0]
             # convert item values to the appropriate data types
             item = self._convert_data_types(
