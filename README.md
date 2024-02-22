@@ -85,9 +85,8 @@ or
 make run ARGS="..."
 ```
 
-### Note
-
-The script can run with the browser in `headless` mode. In my tests, however, I've noticed that it often causes the server to display captchas, thus making the script scraping process to fail.
+> [!WARNING]
+> The script can run with the browser in `headless` mode. In my tests, however, I've noticed that it often causes the server to display captchas, thus making the script scraping process to fail.
 
 
 ## Output
