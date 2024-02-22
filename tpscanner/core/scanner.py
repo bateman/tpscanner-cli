@@ -92,7 +92,11 @@ class Scanner:
                     if item["seller"] == seller:
                         best_deal_items["name"] = item_name
                         best_deal_items["seller"] = item["seller"]
+                        best_deal_items["seller_link"] = item["seller_link"]
                         best_deal_items["seller_reviews"] = item["seller_reviews"]
+                        best_deal_items["seller_reviews_link"] = item[
+                            "seller_reviews_link"
+                        ]
                         best_deal_items["seller_rating"] = item["seller_rating"]
                         best_deal_items["delivery_price"] = item["delivery_price"]
                         best_deal_items["free_delivery"] = item["free_delivery"]
