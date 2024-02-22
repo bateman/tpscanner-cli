@@ -60,7 +60,7 @@ class Scanner:
         count = 0
         for _, items in self.individual_deals.items():
             for item in items:
-                if item["availability"] is False:
+                if item["availability"] is False and "Amazon" not in item["seller"]:
                     items.remove(item)
                     count += 1
         return count
