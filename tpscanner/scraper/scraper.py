@@ -117,9 +117,15 @@ class Scraper:
                 merchant = element.xpath(
                     'div[@class="item_info"]/div[@class="item_merchant"]/div/a/span'
                 )[0].text.strip()
+                merchant_link = element.xpath(
+                    'div[@class="item_info"]/div[@class="item_merchant"]/div/a/@href'
+                )[0]
                 merchant_reviews = element.xpath(
                     'div[@class="item_info"]/div[@class="item_merchant"]/div[@class="wrap_merchant_reviews"]/a[@class="merchant_reviews"]'
                 )[0].text.strip()
+                merchant_reviews_link = element.xpath(
+                    'div[@class="item_info"]/div[@class="item_merchant"]/div[@class="wrap_merchant_reviews"]/a/@href'
+                )[0]
                 try:
                     merchant_rating = element.xpath(
                         'div[@class="item_info"]/div[@class="item_merchant"]/div[@class="wrap_merchant_reviews"]/a[starts-with(@class, "merchant_reviews rating_image")]'
@@ -151,7 +157,9 @@ class Scraper:
                 # convert item values to the appropriate data types
                 item = self._convert_data_types(
                     merchant,
+                    merchant_link,
                     merchant_reviews,
+                    merchant_reviews_link,
                     merchant_rating,
                     price,
                     quantity,
@@ -194,9 +202,15 @@ class Scraper:
             merchant = element.xpath(
                 'div[@class="item_info"]/div[@class="item_merchant"]/div/a/span'
             )[0].text.strip()
+            merchant_link = element.xpath(
+                'div[@class="item_info"]/div[@class="item_merchant"]/div/a/@href'
+            )[0]
             merchant_reviews = element.xpath(
                 'div[@class="item_info"]/div[@class="item_merchant"]/div[@class="wrap_merchant_reviews"]/a[@class="merchant_reviews"]'
             )[0].text.strip()
+            merchant_reviews_link = element.xpath(
+                'div[@class="item_info"]/div[@class="item_merchant"]/div[@class="wrap_merchant_reviews"]/a/@href'
+            )[0]
             try:
                 merchant_rating = element.xpath(
                     'div[@class="item_info"]/div[@class="item_merchant"]/div[@class="wrap_merchant_reviews"]/a[starts-with(@class, "merchant_reviews rating_image")]'
@@ -223,7 +237,9 @@ class Scraper:
             # convert item values to the appropriate data types
             item = self._convert_data_types(
                 merchant,
+                merchant_link,
                 merchant_reviews,
+                merchant_reviews_link,
                 merchant_rating,
                 price,
                 quantity,
@@ -248,7 +264,9 @@ class Scraper:
     def _convert_data_types(
         self,
         merchant,
+        merchant_link,
         merchant_reviews,
+        merchant_reviews_link,
         merchant_rating,
         price,
         quantity,
@@ -261,8 +279,12 @@ class Scraper:
         item = {}
 
         item["seller"] = merchant
+        item["seller_link"] = "https://www.trovaprezzi.it" + merchant_link
         merchant_reviews = number_pattern.search(merchant_reviews).group()
         item["seller_reviews"] = int(merchant_reviews.replace(".", ""))
+        item["seller_reviews_link"] = (
+            "https://www.trovaprezzi.it" + merchant_reviews_link
+        )
         price = number_pattern.search(price).group()
         if merchant_rating:
             merchant_rating = merchant_rating.split(" ")[2].replace("rate", "")
