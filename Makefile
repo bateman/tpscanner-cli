@@ -15,6 +15,9 @@ help:
 	@echo "update    - update the project dependencies"
 	@echo "export    - export the project dependencies"
 	@echo "build     - build the project release"
+	@echo "patch     - bump the patch version"
+	@echo "minor     - bump the minor version"
+	@echo "major     - bump the major version"
 
 format:
 	ruff format
@@ -50,3 +53,24 @@ export: pyproject.toml
 
 build: pyproject.toml
 	poetry build
+
+patch:
+	poetry version patch
+	version=$(poetry version)
+	version_number=${version##* }
+	git tag ${version_number}
+	git push origin ${version_number}
+
+minor:
+	poetry version minor
+	version=$(poetry version)
+	version_number=${version##* }
+	git tag ${version_number}
+	git push origin ${version_number}
+
+major:
+	poetry version major
+	version=$(poetry version)
+	version_number=${version##* }
+	git tag ${version_number}
+	git push origin ${version_number}
