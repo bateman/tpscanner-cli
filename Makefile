@@ -2,7 +2,7 @@
 
 DEFAULT_GOAL := help
 
-.PHONY: help format lint clean precommit run update
+.PHONY: help format lint clean precommit run update patch minor major bump_version check_poetry
 
 help:
 	@echo "help      - show this help"
@@ -37,40 +37,43 @@ ARGS = ""
 run:
 	python -m tpscanner $(ARGS)
 
-update:
+update: check_poetry
 	poetry update
 	poetry lock --no-update
 	poetry run pre-commit autoupdate
 
-install:
+install: check_poetry
 	poetry install
 	poetry lock --no-update
 	poetry run pre-commit install
 
-export: pyproject.toml
+export: check_poetry pyproject.toml
 	poetry export -f requirements.txt --output requirements.txt --without-hashes --without dev
 	poetry export -f requirements.txt --output requirements-dev.txt --without-hashes --with dev
 
-build: pyproject.toml
+build: check_poetry pyproject.toml
 	poetry build
 
-patch:
+patch: check_poetry
 	poetry version patch
-	version=$(poetry version)
-	version_number=${version##* }
-	git tag ${version_number}
-	git push origin ${version_number}
+	$(MAKE) bump_version
 
-minor:
+minor: check_poetry
 	poetry version minor
-	version=$(poetry version)
-	version_number=${version##* }
-	git tag ${version_number}
-	git push origin ${version_number}
+	$(MAKE) bump_version
 
-major:
+major: check_poetry
 	poetry version major
-	version=$(poetry version)
-	version_number=${version##* }
-	git tag ${version_number}
-	git push origin ${version_number}
+	$(MAKE) bump_version
+
+bump_version: check_poetry
+	$(eval version=$(shell poetry version))
+	$(eval version_number=$(shell echo $(version) | awk '{print $$NF}'))
+	echo "Bump version to $(version_number)"
+	git add pyproject.toml
+	git commit -m "Bump version to $(version_number)"
+	git tag $(version_number)
+	git push origin $(version_number)
+
+check_poetry:
+	@which poetry >/dev/null || (echo "Poetry is not installed"; exit 1)
