@@ -142,7 +142,7 @@ def _create_workbook(filename, sheetname, headers, items, keys, col_format_start
         cell.style = header_style
 
     # Write the data
-    blue_font = Font(color=Color(rgb="1e2460"), underline="single")
+    blue_font = Font(color=Color(rgb="2a65d1"), underline="single")
     for row, item in enumerate(items, start=2):
         for i, key in enumerate(keys, start=1):
             if key == "link":
