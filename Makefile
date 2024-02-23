@@ -72,6 +72,7 @@ bump_version: check_poetry
 	echo "Bump version to $(version_number)"
 	git add pyproject.toml
 	git commit -m "Bump version to $(version_number)"
+	git push origin
 	git tag $(version_number)
 	git push origin $(version_number)
 
