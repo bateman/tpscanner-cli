@@ -56,7 +56,7 @@ To run the script, use the following command:
 ```bash
 python -m tpscanner -u url1 url2 ... | -f path/to/input/file.txt [-q n1 n2 ...] [--includena] [-w n] [--headless] [--console] [--excel]
 ```
-```
+```console
 options:
   -h, --help              Show this help message and exit
   -u URL [URL ...], --url URL [URL ...]
