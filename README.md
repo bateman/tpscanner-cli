@@ -12,6 +12,7 @@
 ![GitHub Release](https://img.shields.io/github/v/release/bateman/tpscanner-cli?style=for-the-badge)
 ![GitHub language count](https://img.shields.io/github/languages/count/bateman/tpscanner-cli?style=for-the-badge)
 ![GitHub top language](https://img.shields.io/github/languages/top/bateman/tpscanner-cli?style=for-the-badge)
+![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/bateman/tpscanner-cli?style=for-the-badge)
 ![GitHub License](https://img.shields.io/github/license/bateman/tpscanner-cli?style=for-the-badge)
 
 
