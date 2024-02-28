@@ -8,6 +8,7 @@
 ```
 # 
 
+![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/bateman/tpscanner-cli/release.yml?style=for-the-badge)
 ![GitHub Release](https://img.shields.io/github/v/release/bateman/tpscanner-cli?style=for-the-badge)
 ![GitHub language count](https://img.shields.io/github/languages/count/bateman/tpscanner-cli?style=for-the-badge)
 ![GitHub top language](https://img.shields.io/github/languages/top/bateman/tpscanner-cli?style=for-the-badge)
