@@ -8,6 +8,8 @@
 ```
 # 
 
+![GitHub Release](https://img.shields.io/github/v/release/bateman/tpscanner-cli?style=for-the-badge)
+
 TPScanner is a Python script that extracts prices of items from [Trovaprezzi.it](https://www.trovaprezzi.it/), sorts them, displays and saves the results in a spreadsheet. It also finds the best cumulative and individual deals.
 
 ![Intro Image](img/intro.gif)
