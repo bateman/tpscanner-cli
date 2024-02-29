@@ -1,8 +1,8 @@
 
 
 ```
- _________  ____                          
-/_  __/ _ \/ __/______ ____  ___  ___ ____
+ _________                            
+/_  __/ _ \  __ ______ ____  ___  ___ ____
  / / / ___/\ \/ __/ _ `/ _ \/ _ \/ -_) __/
 /_/ /_/  /___/\__/\_,_/_//_/_//_/\__/_/   
 ```
@@ -16,7 +16,7 @@
 ![GitHub License](https://img.shields.io/github/license/bateman/tpscanner-cli?style=for-the-badge)
 
 
-TPScanner is a Python script that extracts prices of items from [Trovaprezzi.it](https://www.trovaprezzi.it/), sorts them, displays and saves the results in a spreadsheet. It also finds the best cumulative and individual deals.
+***TPscanner*** is a Python script that extracts prices of items from [Trovaprezzi.it](https://www.trovaprezzi.it/), sorts them, displays and saves the results in a spreadsheet. It also finds the best cumulative and individual deals.
 
 ![Intro Image](img/intro.gif)
 
