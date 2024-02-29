@@ -18,6 +18,8 @@
 
 ***TPscanner*** is a Python script that extracts prices of items from [Trovaprezzi.it](https://www.trovaprezzi.it/), sorts them, displays and saves the results in a spreadsheet. It also finds the best cumulative and individual deals.
 
+If your don't want to use the command line, check the [TPscanner browser extension](https://github.com/bateman/tpscanner-cli). It works on Chromium-based browsers (e.g., Chrome, Edge), Firefox, and Safari.
+
 ![Intro Image](img/intro.gif)
 
 ## Setup
