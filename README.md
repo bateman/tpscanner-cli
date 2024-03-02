@@ -102,7 +102,7 @@ make run ARGS="..."
 ## Output
 
 When the `--console` option is enabled, the script outputs to the console
-the results in form of tables.
+the results in the form of tables.
 
 When the `--excel` option is enabled, the script creates a spreadsheet named `results_<current_datetime>.xlsx` with the sorted list of items and the best cumulative deals.
 
@@ -112,8 +112,8 @@ You can configure the script by editing the file `config/config.json`. At the mo
 
 - `sleep_rate_limit = 2`: Too aggressive scraping will cause the server to show captchas. By default, the script will wait 2 secs. in between each item's offer scraping.
 - `chrome_version: 120`: The Chrome version to use with the undetected_chromdriver module.
-- `user_agents = []`: A list of browser User-Agent strings to cycle through when running in headless mode.
-- `output_dir = results`: The output directory where to store the Excel output file. By default, it is set to the `results/` subfolder in the current working directory.
+- `user_agents = []`: A list of browser User-Agent strings to cycle through in headless mode.
+- `output_dir = results`: The output directory where to store the Excel output file. It is set to the `results/` subfolder in the current working directory by default.
 
 ## License
 
