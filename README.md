@@ -96,7 +96,7 @@ make run ARGS="..."
 ```
 
 > [!WARNING]
-> The script can run with the browser in `headless` mode. In my tests, however, I've noticed that it often causes the server to display captchas, thus making the script scraping process to fail.
+> The script can run with the browser in `headless` mode. In my tests, however, I've noticed that it often causes the server to display captchas, thus making the script scraping process fail.
 
 
 ## Output
