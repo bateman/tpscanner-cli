@@ -1,10 +1,17 @@
 [tool.poetry]
-name = "tpscanner"
+name = "TPscanner"
 version = "1.1.0"
 description = "A Python script that finds the best cumulative and individual deals from Trovaprezzi.it"
 authors = ["Fabio Calefato <@bateman>"]
 license = "MIT License"
 readme = "README.md"
+
+[tool.poetry.scripts]
+tpscanner = "tpscanner.tpscanner:main"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
 
 [tool.poetry.dependencies]
 python = "^3.12"
@@ -15,17 +22,53 @@ openpyxl = "^3.1.2"
 rich = "^13.7.0"
 pretty-errors = "^1.2.25"
 
-[tool.poetry.scripts]
-tpscanner = "tpscanner.tpscanner:main"
-
 [tool.poetry.group.dev.dependencies]
-ruff = "^0.1.14"
-pre-commit = "^3.6.0"
+ruff = "*"
+mypy = "*"
+pre-commit = "*"
 
-[build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+[tool.poetry.group.test.dependencies]
+pytest = "*"
+pytest-cov = "*"
+
+[tool.poetry.group.docs.dependencies]
+mkdocs = "*"
+mkdocs-material = "*"
+mkdocstrings = "*"
+mkdocs-autorefs = "*"
+mkdocstrings-python = "*"
+markdown-callouts = "*"
+pygments = "^2.17.2"
+pymdown-extensions = "^10.7.1"
+
+[tool.mypy]
+ignore_missing_imports = true
 
 [tool.ruff]
 fix = true
-extend-select = ["I"] 
+line-length = 88
+indent-width = 4
+
+[tool.ruff.lint]
+fixable = ["ALL"]
+dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
+extend-select = [ "I", "D", "S"]
+ignore = [ "D203", "D211", "D213", "D406", "D407", ]
+ignore-init-module-imports = true
+
+[tool.ruff.lint.per-file-ignores]
+"__init__.py" = ["F401"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+skip-magic-trailing-comma = false
+line-ending = "auto"
+docstring-code-format = true
+docstring-code-line-length = 60
+
+[tool.ruff.lint.pycodestyle]
+max-doc-length = 88
+
+[tool.pytest.ini_options]
+addopts = [ "--cov-fail-under=5", "--cov-report=term-missing" ]
