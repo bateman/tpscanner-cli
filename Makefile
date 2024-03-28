@@ -18,10 +18,6 @@ PYTHON := $(shell command -v python 2> /dev/null)
 PYENV_ROOT := $(shell pyenv root)
 GIT := $(shell command -v git 2> /dev/null)
 GIT_VERSION := $(shell $(GIT) --version 2> /dev/null || echo -e "\033[31mnot installed\033[0m")
-DOCKER := $(shell command -v docker 2> /dev/null)
-DOCKER_VERSION := $(shell if [ -n "$(DOCKER)" ]; then $(DOCKER) --version 2> /dev/null; fi)
-DOCKER_COMPOSE := $(shell if [ -n "$(DOCKER)" ]; then command -v docker-compose 2> /dev/null || echo "$(DOCKER) compose"; fi)
-DOCKER_COMPOSE_VERSION := $(shell if [ -n "$(DOCKER_COMPOSE)" ]; then $(DOCKER_COMPOSE) version 2> /dev/null; fi )
 
 # Project variables -- change as needed before running make install
 # override the defaults by setting the variables in a Makefile.env file
@@ -39,17 +35,12 @@ PROJECT_LICENSE ?= $(shell $(GREP) 'license' pyproject.toml | $(SED) 's/license 
 PYTHON_VERSION ?= 3.12.1
 PYENV_VIRTUALENV_NAME ?= venv-$(shell echo "$(PROJECT_NAME)")
 PRECOMMIT_CONF ?= .pre-commit-config.yaml
-DOCKER_FILE ?= Dockerfile
-DOCKER_COMPOSE_FILE ?= docker-compose.yml
-DOCKER_IMAGE_NAME ?= $(PROJECT_NAME)
-DOCKER_CONTAINER_NAME ?= $(PROJECT_NAME)
 
 # Stamp files
 INSTALL_STAMP := .install.stamp
 PRODUCTION_STAMP := .production.stamp
 DEPS_EXPORT_STAMP := .deps-export.stamp
 BUILD_STAMP := .build.stamp
-DOCKER_BUILD_STAMP := .docker-build.stamp
 DOCS_STAMP := .docs.stamp
 RELEASE_STAMP := .release.stamp
 STAGING_STAMP := .staging.stamp
@@ -68,7 +59,6 @@ COVERAGE := .coverage $(wildcard coverage.*)
 PY_FILES := $(shell find . -type f -name '*.py')
 DOCS_FILES := $(shell test -d $(DOCS) && find $(DOCS) -type f -name '*.md') README.md
 PROJECT_INIT := .project-init
-DOCKER_FILES_TO_UPDATE := $(DOCKER_FILE) $(DOCKER_COMPOSE_FILE) entrypoint.sh
 PY_FILES_TO_UPDATE := $(SRC)/main.py $(SRC)/__main__.py $(SRC)/logger/__init__.py $(TESTS)/test_main.py
 DOCS_FILES_TO_RESET := README.md $(DOCS)/index.md $(DOCS)/about.md
 
@@ -116,19 +106,6 @@ info:  ## Show development environment info
 	@echo -e "  $(CYAN)Pyenv root:$(RESET) $(PYENV_ROOT)"
 	@echo -e "  $(CYAN)Pyenv virtualenv name:$(RESET) $(PYENV_VIRTUALENV_NAME)"
 	@echo -e "  $(CYAN)Poetry version:$(RESET) $(shell $(POETRY) --version || echo "$(RED)not installed $(RESET)")"
-	@echo -e "$(MAGENTA)Docker:$(RESET)"
-	@if [ -n "$(DOCKER_VERSION)" ]; then \
-		echo -e "  $(CYAN)Docker:$(RESET) $(DOCKER_VERSION)"; \
-	else \
-		echo -e "  $(CYAN)Docker:$(RESET) $(RED)not installed $(RESET)"; \
-	fi
-	@if [ -n "$(DOCKER_COMPOSE_VERSION)" ]; then \
-		echo -e "  $(CYAN)Docker Compose:$(RESET) $(DOCKER_COMPOSE_VERSION)"; \
-	else \
-		echo -e "  $(CYAN)Docker Compose:$(RESET) $(RED)not installed $(RESET)"; \
-	fi
-	@echo -e "  $(CYAN)Docker image name:$(RESET) $(DOCKER_IMAGE_NAME)"
-	@echo -e "  $(CYAN)Docker container name:$(RESET) $(DOCKER_CONTAINER_NAME)"
 
 # Dependencies
 
@@ -147,14 +124,6 @@ dep/python: dep/pyenv
 .PHONY: dep/poetry
 dep/poetry: dep/python
 	@if [ -z "$(POETRY)" ]; then echo -e "$(RED)Poetry not found.$(RESET)" && exit 1; fi
-
-.PHONY: dep/docker
-dep/docker:
-	@if [ -z "$(DOCKER)" ]; then echo -e "$(RED)Docker not found.$(RESET)" && exit 1; fi
-
-.PHONY: dep/docker-compose
-dep/docker-compose:
-	@if [ -z "$(DOCKER_COMPOSE)" ]; then echo -e"$(RED)Docker Compose not found.$(RESET)" && exit 1; fi
 
 #-- System
 
@@ -211,7 +180,6 @@ $(INSTALL_STAMP): pyproject.toml
 			mv python_pyenv_poetry_template/* $(SRC)/ ; \
 			rm -rf python_pyenv_poetry_template ; \
 			echo -e "$(CYAN)Updating files...$(RESET)"; \
-			$(SED_INPLACE) "s/python_pyenv_poetry_template/$(PROJECT_NAME)/g" $(DOCKER_FILES_TO_UPDATE) ; \
 			$(SED_INPLACE) "s/python_pyenv_poetry_template/$(PROJECT_NAME)/g" $(PY_FILES_TO_UPDATE) ; \
 			$(SED_INPLACE) "s/python_pyenv_poetry_template/$(PROJECT_NAME)/g" $(DOCS)/module.md ; \
 			NEW_TEXT="#$(PROJECT_NAME)\n\n$(subst ",,$(subst ',,$(PROJECT_DESCRIPTION)))"; \
@@ -388,7 +356,7 @@ release/version: | tag staging  ## Tag a new release version
 	fi
 
 .PHONY: release/publish
-release/publish: | dep/git  ## Push the tagged version to origin - triggers the release and docker actions
+release/publish: | dep/git  ## Push the tagged version to origin - triggers the release action
 	@$(eval TAG := $(shell $(GIT) describe --tags --abbrev=0))
 	@$(eval REMOTE_TAGS := $(shell $(GIT) ls-remote --tags origin | $(AWK) '{print $$2}'))
 	@if echo $(REMOTE_TAGS) | grep -q $(TAG); then \
@@ -399,38 +367,6 @@ release/publish: | dep/git  ## Push the tagged version to origin - triggers the 
 		$(GIT) push origin $(TAG); \
 		echo -e "$(GREEN)Release $(TAG) pushed.$(RESET)"; \
 	fi
-
-#-- Docker
-
-.PHONY: docker/build
-docker/build: dep/docker dep/docker-compose $(INSTALL_STAMP) $(DEPS_EXPORT_STAMP) $(DOCKER_BUILD_STAMP)  ## Build the Docker image
-$(DOCKER_BUILD_STAMP): $(DOCKER_FILE) $(DOCKER_COMPOSE_FILE)
-	@echo -e "$(CYAN)\nBuilding the Docker image...$(RESET)"
-	@DOCKER_IMAGE_NAME=$(DOCKER_IMAGE_NAME) DOCKER_CONTAINER_NAME=$(DOCKER_CONTAINER_NAME) $(DOCKER_COMPOSE) build
-	@echo -e "$(GREEN)Docker image built.$(RESET)"
-	@touch $(DOCKER_BUILD_STAMP)
-
-.PHONY: docker/run
-docker/run: dep/docker $(DOCKER_BUILD_STAMP)  ## Run the Docker container
-	@echo -e "$(CYAN)\nRunning the Docker container...$(RESET)"
-	@DOCKER_IMAGE_NAME=$(DOCKER_IMAGE_NAME) DOCKER_CONTAINER_NAME=$(DOCKER_CONTAINER_NAME) ARGS="$(ARGS)" $(DOCKER_COMPOSE) up
-	@echo -e "$(GREEN)Docker container executed.$(RESET)"
-
-.PHONY: docker/all
-docker/all: docker/build docker/run  ## Build and run the Docker container
-
-.PHONY: docker/stop
-docker/stop: | dep/docker dep/docker-compose  ## Stop the Docker container
-	@echo -e "$(CYAN)\nStopping the Docker container...$(RESET)"
-	@DOCKER_IMAGE_NAME=$(DOCKER_IMAGE_NAME) DOCKER_CONTAINER_NAME=$(DOCKER_CONTAINER_NAME) $(DOCKER_COMPOSE) down
-	@echo -e "$(GREEN)Docker container stopped.$(RESET)"
-
-.PHONY: docker/remove
-docker/remove: | dep/docker dep/docker-compose  ## Remove the Docker image, container, and volumes
-	@echo -e "$(CYAN)\nRemoving the Docker image...$(RESET)"
-	@DOCKER_IMAGE_NAME=$(DOCKER_IMAGE_NAME) DOCKER_CONTAINER_NAME=$(DOCKER_CONTAINER_NAME) $(DOCKER_COMPOSE) down -v --rmi all
-	@rm -f $(DOCKER_BUILD_STAMP)
-	@echo -e "$(GREEN)Docker image removed.$(RESET)"
 
 #-- Documentation
 
