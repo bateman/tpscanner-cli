@@ -5,6 +5,7 @@ description = "A Python script that finds the best cumulative and individual dea
 authors = ["Fabio Calefato <@bateman>"]
 license = "MIT License"
 readme = "README.md"
+repository = "https://github.com/bateman/tpscanner-cli"
 
 [tool.poetry.scripts]
 tpscanner = "tpscanner.tpscanner:main"
