@@ -1,0 +1,74 @@
+# Project information
+site_name: tpscanner-cli
+site_url: https://bateman.github.io/tpscanner-cli/
+site_description: A Python script that finds the best cumulative and individual deals from Trovaprezzi.it
+site_author: Fabio Calefato <fcalefato@gmail.com>
+
+# Repository
+repo_url: https://github.com/bateman/tpscanner-cli
+repo_name: bateman/tpscanner-cli
+edit_uri: "" #disables edit button
+
+# Copyright
+copyright: MIT License 2024
+
+# Configuration
+theme:
+  name: material
+  language: en
+  palette:
+    # Palette toggle for automatic mode
+    - media: "(prefers-color-scheme)"
+      toggle:
+        icon: material/brightness-auto
+        name: Switch to light mode
+    # Palette toggle for light mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    # Palette toggle for dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
+  - github-callouts
+
+plugins:
+  - search
+  - autorefs
+  - mkdocstrings:
+      default_handler: python
+      handlers:
+        python:
+          options:
+            show_source: false
+
+nav:
+  - Home: index.md
+  - Documentation:
+    - Scanner: scanner.md
+    - Scraper: scraper.md
+    - Configuration: config.md
+    - IO: io.md
+    - UI: ui.md
+    - Logger: logger.md
+    - Utils: utils.md
+  - Info:
+    - About: about.md
+    - License: license.md

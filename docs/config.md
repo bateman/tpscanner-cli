@@ -1,0 +1,3 @@
+# Config
+
+::: tpscanner.config.Config
