@@ -1,4 +1,4 @@
-# __init__.py
+"""This module is used to initialize the logger."""
 
 from .logger import Logger
 

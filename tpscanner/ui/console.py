@@ -1,4 +1,6 @@
-# console.py
+"""This module contains the Console class for displaying formatted output using the Rich library."""
+
+from typing import ClassVar, List, Optional
 
 from rich.console import Console as RichConsole
 from rich.rule import Rule
@@ -7,11 +9,28 @@ from rich.theme import Theme
 
 
 class Console:
-    console = None
-    columns_individual = []
-    columns_cumulative = []
+    """Console class for displaying formatted output using the Rich library.
+
+    Attributes:
+        console (RichConsole): The RichConsole object used for printing formatted output.
+        columns_individual (list): List of tuples representing the columns for individual deals table.
+        columns_cumulative (list): List of tuples representing the columns for cumulative deals table.
+
+    Methods:
+        __init__(): Initializes the Console object with a RichConsole instance and sets the column configurations.
+        print(message, level="info"): Prints a message with the specified level of styling.
+        _create_table(title, columns): Creates a Rich Table object with the specified title and column configurations.
+        display_best_individual_deals(best_individual_deals, title): Displays the best individual deals in a formatted table.
+        display_best_cumulative_deals(best_cumulative_deals, title): Displays the best cumulative deals in a formatted table.
+
+    """
+
+    console: ClassVar = None
+    columns_individual: List[dict] = []
+    columns_cumulative: List[dict] = []
 
     def __init__(self):
+        """Initialize the Console object with a RichConsole instance and sets the column configurations."""
         theme = Theme(
             {
                 "banner": "bold green",
@@ -51,17 +70,25 @@ class Console:
             ("Avail.", "white", "center", 7),
         ]
 
-    def print(self, message, level="info"):
+    def print(self, message: str, level: str = "info") -> None:
+        """Print a message with the specified level of styling.
+
+        Arguments:
+            message (str): The message to be printed.
+            level (str): The level of styling to be applied to the message.
+
+        """
         if level == "banner":
-            self.console.print(message, style="bold green")
+            self.rich_print(message, style="bold green")
         elif level == "start" or level == "end":
             print("\n")
-            self.console.print(Rule(message), style="bold magenta")
+            self.rich_print(Rule(message), style="bold magenta")
             print("\n")
         else:
-            self.console.print(message, style=level)
+            self.rich_print(message, style=level)
 
-    def _create_table(self, title, columns):
+    def _create_table(self, title: str, columns: List[dict]) -> Table:
+        """Create a Rich Table object with the specified title and column configurations."""
         table = Table(
             title=title,
             header_style="white on dark_blue",
@@ -73,7 +100,19 @@ class Console:
             table.add_column(column, style=style, justify=justify, width=width)
         return table
 
-    def display_best_individual_deals(self, best_individual_deals, title):
+    def display_best_individual_deals(
+        self, best_individual_deals: List[dict], title: str
+    ) -> None:
+        """Display the best individual deals.
+
+        This function takes a list of deals, sorts them in descending order of value,
+        and prints the top deals to the console.
+
+        Arguments:
+            best_individual_deals (list): A list of Deal objects. Each Deal object should have a 'value' attribute.
+            title (str): The title of the table.
+
+        """
         best_individual_deals_table = self._create_table(title, self.columns_individual)
         for item in best_individual_deals:
             best_individual_deals_table.add_row(
@@ -92,9 +131,21 @@ class Console:
                 ":white_check_mark:" if item["availability"] else ":x:",
             )
         print("\n")
-        self.console.print(best_individual_deals_table)
+        self.rich_print(best_individual_deals_table)
 
-    def display_best_cumulative_deals(self, best_cumulative_deals, title):
+    def display_best_cumulative_deals(
+        self, best_cumulative_deals: List[dict], title: str
+    ) -> None:
+        """Display the best cumulative deals.
+
+        This function takes a list of cumulative deals, sorts them in descending order of value,
+        and prints the top deals to the console.
+
+        Arguments:
+            best_cumulative_deals (list): A list of cumulative deal objects. Each cumulative deal object should have a 'value' attribute.
+            title (str): The title of the table.
+
+        """
         best_cumulative_deals_table = self._create_table(title, self.columns_cumulative)
         for item in best_cumulative_deals:
             best_cumulative_deals_table.add_row(
@@ -110,4 +161,14 @@ class Console:
                 ":white_check_mark:" if item["availability"] else ":x:",
             )
         print("\n")
-        self.console.print(best_cumulative_deals_table)
+        self.rich_print(best_cumulative_deals_table)
+
+    def rich_print(self, message: str, style: Optional[str] = None) -> None:
+        """Print a message with the specified style using the Rich library.
+
+        Arguments:
+            message (str): The message to be printed.
+            style (str): The style to be applied to the message.
+
+        """
+        self.console.print(message, style)

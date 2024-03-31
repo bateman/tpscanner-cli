@@ -1,4 +1,4 @@
-# pricescanner.py
+"""This module contains the Scraper class that is responsible for scraping the Trovaprezzi website."""
 
 import random
 import re
@@ -17,7 +17,16 @@ from tpscanner.utils import sleep
 
 
 class Scraper:
-    def __init__(self, wait, headless):
+    """Scraper class for scraping the Trovaprezzi website."""
+
+    def __init__(self, wait: int, headless: bool):
+        """Initialize the Scraper object with the specified wait time and headless mode.
+
+        Arguments:
+            wait (int): The wait time for the WebDriver to wait for an element to be clickable.
+            headless (bool): A boolean value indicating whether to run the WebDriver in headless mode.
+
+        """
         self.wait = wait
         self.headless = headless
         self.driver = self._setup_driver()
@@ -27,7 +36,7 @@ class Scraper:
         if self.headless:
             chrome_options = uc.ChromeOptions()
             chrome_options.add_argument(
-                f"user-agent={random.choice(config.user_agents)}"
+                f"user-agent={random.choice(config.user_agents)}"  # noqa S311
             )
             # options.add_experimental_option("prefs", {"profile.managed_default_content_settings.javascript": 2})
         else:
@@ -73,7 +82,16 @@ class Scraper:
             self.driver.save_screenshot("error.png")
             raise
 
-    def download_html(self, url):
+    def download_html(self, url: str) -> tuple:
+        """Download the HTML content of the specified URL.
+
+        Arguments:
+            url (str): The URL to download the HTML content from.
+
+        Returns:
+            tuple: A tuple containing the HTML content of the page.
+
+        """
         self._navigate_to_url(url)
         # Click on show more offers button
         # while True:
@@ -96,18 +114,28 @@ class Scraper:
         html_content_including_hipping = self.driver.page_source
         return html_content_plus_shipping, html_content_including_hipping
 
-    def extract_prices_plus_shipping(self, html_content, quantity):
+    def extract_prices_plus_shipping(self, html_content: str, quantity: int) -> tuple:
+        """Extract the prices of the items plus shipping cost from the HTML content.
+
+        Arguments:
+            html_content (str): The HTML content to extract the prices from.
+            quantity (int): The quantity of items to buy.
+
+        Returns:
+            tuple: A tuple containing the item name and a list of items.
+
+        """
         results = []
         item_name = ""
         try:
             tree = html.fromstring(html_content)
 
             # Use XPath to access the sellers and items
-            item_name = tree.xpath(
+            temp = tree.xpath(
                 '//div[@class="name_and_rating"]/h1/strong/text() | //div[@class="name_and_rating"]/h1/text()[normalize-space()] | //div[@class="search_results_heading"]/h1/strong/text()'
             )
-            item_name = [item.strip() for item in item_name]
-            item_name = " ".join(item_name)
+            temp = [item.strip() for item in temp]
+            item_name = " ".join(temp)
             if not item_name:
                 logger.error("No item name found, going with default.")
                 raise Exception("No item name found.")
@@ -182,7 +210,19 @@ class Scraper:
 
         return item_name, results
 
-    def extract_best_price_shipping_included(self, html_content, quantity):
+    def extract_best_price_shipping_included(
+        self, html_content: str, quantity: int
+    ) -> tuple:
+        """Extract the best price of the item shipping included from the HTML content.
+
+        Arguments:
+            html_content (str): The HTML content to extract the prices from.
+            quantity (int): The quantity of items to buy.
+
+        Returns:
+            tuple: A tuple containing the item name and the best price item.
+
+        """
         item = {}
         item_name = ""
         try:
@@ -190,11 +230,11 @@ class Scraper:
             tree = html.fromstring(html_content)
 
             # Use XPath to access the sellers and items
-            item_name = tree.xpath(
+            temp = tree.xpath(
                 '//div[@class="name_and_rating"]/h1/strong/text() | //div[@class="name_and_rating"]/h1/text()[normalize-space()]'
             )
-            item_name = [item.strip() for item in item_name]
-            item_name = " ".join(item_name)
+            temp = [item.strip() for item in temp]
+            item_name = " ".join(temp)
 
             # we only need the first item (best price shipping included)
             element = tree.xpath('//*[@id="listing"]/ul/li')[0]

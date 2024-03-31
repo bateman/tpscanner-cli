@@ -1,4 +1,4 @@
-# __main__.py
+"""This module is the entry point for the tpscanner package."""
 
 from tpscanner import tpscanner
 

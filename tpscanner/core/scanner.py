@@ -1,4 +1,4 @@
-# scanner.py
+"""This module contains the Scanner class that is responsible for scanning the URLs and extracting the prices and shipping costs."""
 
 import datetime
 
@@ -11,7 +11,42 @@ from tpscanner.utils import sleep
 
 
 class Scanner:
+    """Scanner class that is responsible for scanning the URLs and extracting the prices and shipping costs.
+
+    Attributes:
+        level (str): The level of the scanner.
+        urls (list): The list of URLs to scan.
+        quantities (list): The list of quantities for each URL.
+        wait (int): The number of seconds to wait before scraping the next URL.
+        headless (bool): The headless mode of the browser.
+        console_out (bool): The console output flag.
+        excel_out (bool): The Excel output flag.
+        individual_deals (dict): The dictionary of individual deals.
+        best_individual_deals (list): The list of best individual deals.
+        best_cumulative_deals (dict): The dictionary of best cumulative deals.
+        formatted_datetime (str): The formatted datetime string.
+
+    Methods:
+        scan(): Scans the URLs and extracts the prices and shipping costs.
+        remove_unavailable_items(): Removes the unavailable items from the individual deals.
+        find_best_individual_deals(): Finds the best individual deals.
+        find_best_cumulative_deals(): Finds the best cumulative deals.
+
+    """
+
     def __init__(self, level, urls, quantities, wait, headless, console_out, excel_out):
+        """Initialize the Scanner object with the specified parameters.
+
+        Arguments:
+            level (str): The level of the scanner.
+            urls (list): The list of URLs to scan.
+            quantities (list): The list of quantities for each URL.
+            wait (int): The number of seconds to wait before scraping the next URL.
+            headless (bool): The headless mode of the browser.
+            console_out (bool): The console output flag.
+            excel_out (bool): The Excel output flag.
+
+        """
         self.level = level
         self.urls = urls
         self.quantities = quantities
@@ -25,6 +60,22 @@ class Scanner:
         self.formatted_datetime = datetime.datetime.now().strftime("%d-%m-%Y_%H-%M-%S")
 
     def scan(self):
+        """Scan the URLs and extracts the prices and shipping costs.
+
+        This method iterates over the list of URLs and performs the following steps for each URL:
+        1. Creates an instance of the Scraper class with the specified wait time and headless mode.
+        2. Downloads the HTML content for the URL, including prices plus shipping costs and best prices with shipping costs included.
+        3. Extracts the item name and a list of items with their respective prices and shipping costs.
+        4. Extracts the best price with shipping costs included.
+        5. If the best price is not already in the list of items, it is added.
+        6. Sorts the list of items by price.
+        7. Stores the list of items in the individual_deals dictionary with the item name as the key.
+        8. Logs the number of deals found for the item.
+        9. Waits for a specified amount of time before processing the next URL.
+
+        Note: This method uses the Progress class from the rich.progress module to display a progress bar during the scanning process.
+
+        """
         i = 0
         with Progress() as progress:
             task = progress.add_task("Processing items:", total=len(self.urls))
@@ -56,7 +107,13 @@ class Scanner:
                 sleep(config.sleep_rate_limit)
                 progress.update(task, advance=1)
 
-    def remove_unavailable_items(self):
+    def remove_unavailable_items(self) -> int:
+        """Remove the unavailable items from the individual deals.
+
+        Returns:
+            int: The count of removed items.
+
+        """
         count = 0
         for _, items in self.individual_deals.items():
             for item in items:
@@ -66,6 +123,13 @@ class Scanner:
         return count
 
     def find_best_individual_deals(self):
+        """Find the best individual deals.
+
+        This method iterates over the items in the `individual_deals` dictionary and checks if the seller indicates a free delivery
+        threshold and if the cumulative price is greater than or equal to the threshold. If both conditions are met, the item is
+        considered as one of the best individual deals and is added to the `best_individual_deals` list.
+
+        """
         for item_name, items_list in self.individual_deals.items():
             for item in items_list:
                 # if the seller indicates a free delivery threshold and the cumulative price is greater than or equal to the threshold
@@ -77,6 +141,14 @@ class Scanner:
                     self.best_individual_deals.append(item)
 
     def find_best_cumulative_deals(self):
+        """Find the best cumulative deals.
+
+        This method iterates over the items in the `individual_deals` dictionary and checks if the seller indicates a free delivery
+        threshold and if the cumulative price is greater than or equal to the threshold. If both conditions are met, the item is
+        considered as one of the best individual deals and is added to the `best_individual_deals` list.
+
+
+        """
         # find the common sellers
         common_sellers = []
         for _, items in self.individual_deals.items():

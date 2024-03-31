@@ -1,4 +1,4 @@
-# __init__.py
+"""This module is used to initialize the configuration for the application."""
 
 import os
 

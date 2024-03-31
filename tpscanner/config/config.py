@@ -1,3 +1,5 @@
+"""This module is responsible for reading the configuration file and setting the attributes of the Config class."""
+
 import json
 
 import pretty_errors
@@ -17,7 +19,10 @@ pretty_errors.configure(
 
 
 class Config:
+    """Class to read the configuration file and set the attributes of the Config class."""
+
     def __init__(self, filename):
+        """Initialize the Config class."""
         # ensure a file exists and is actually read
         if filename:
             try:
@@ -37,5 +42,5 @@ class Config:
                 raise (f"Config file {filename} not found.")
 
     def __getattr__(self, _):
-        # Return None if the attribute is not found
+        """Return None if the attribute is not found."""
         return None

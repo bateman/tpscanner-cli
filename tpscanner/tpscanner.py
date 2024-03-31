@@ -1,4 +1,4 @@
-# tpscanner.py
+"""Main module for the TPscanner application."""
 
 import argparse
 from datetime import datetime
@@ -22,6 +22,7 @@ banner = """
 
 
 def main():
+    """Start the TPscanner application."""
     # Set up the command line parser
     parser = setup_cli_parser()
 
@@ -99,7 +100,13 @@ def main():
     console.print(message="Done", level="end")
 
 
-def setup_cli_parser():
+def setup_cli_parser() -> argparse.ArgumentParser:
+    """Set up the command line parser.
+
+    Returns:
+    argparse.ArgumentParser: The command line parser.
+
+    """
     parser = argparse.ArgumentParser(description="TrovaPrezzi Scanner")
     group = parser.add_mutually_exclusive_group(required=True)
     group.add_argument("-u", "--url", nargs="+", help="List of URLs to scan")
@@ -136,7 +143,24 @@ def setup_cli_parser():
     return parser
 
 
-def parse_command_line(parser):
+def parse_command_line(parser: argparse.ArgumentParser) -> tuple:
+    """Parse the command line arguments.
+
+    Arguments:
+        parser (ArgumentParser): The command line parser.
+
+    Returns:
+        tuple: A tuple containing the following elements:
+            - level (str): The logging level.
+            - urls (list): The list of URLs to scan.
+            - quantities (list): The list of quantities to buy for each URL.
+            - includena (bool): Whether to include items marked as not available.
+            - wait (int): The wait time between URLs requests.
+            - headless (bool): Whether to run in headless mode.
+            - console_out (bool): Whether to show output in console.
+            - excel_out (bool): Whether to save output to Excel file.
+
+    """
     args = parser.parse_args()
 
     # Retrieve the logging level

@@ -1,4 +1,4 @@
-# save_results.py
+"""Module to save the results to an Excel file."""
 
 import os
 
@@ -9,7 +9,14 @@ from tpscanner.config import config
 from tpscanner.logger import logger
 
 
-def save_individual_deals(filename, individual_deals_items):
+def save_individual_deals(filename, individual_deals_items) -> None:
+    """Save the individual deals to an Excel file.
+
+    Arguments:
+        filename (str): The name of the Excel file.
+        individual_deals_items (dict): The dictionary of individual deals.
+
+    """
     headers = [
         "Seller",
         "Reviews",
@@ -42,7 +49,15 @@ def save_individual_deals(filename, individual_deals_items):
         _create_workbook(filename, name, headers, items, keys, col_format_start_range)
 
 
-def save_best_individual_deals(filename, sheetname, best_deals_items):
+def save_best_individual_deals(filename, sheetname, best_deals_items) -> None:
+    """Save the best individual deals to an Excel file.
+
+    Arguments:
+        filename (str): The name of the Excel file.
+        sheetname (str): The name of the sheet.
+        best_deals_items (list): The list of best individual deals.
+
+    """
     headers = [
         "Product",
         "Seller",
@@ -77,7 +92,15 @@ def save_best_individual_deals(filename, sheetname, best_deals_items):
     )
 
 
-def save_best_cumulative_deals(filename, sheetname, best_deals_items):
+def save_best_cumulative_deals(filename, sheetname, best_deals_items) -> None:
+    """Save the best cumulative deals to an Excel file.
+
+    Arguments:
+        filename (str): The name of the Excel file.
+        sheetname (str): The name of the sheet.
+        best_deals_items (list): The list of best cumulative deals.
+
+    """
     headers = [
         "Seller",
         "Reviews",
