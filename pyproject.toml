@@ -30,6 +30,7 @@ pre-commit = "*"
 
 [tool.poetry.group.test.dependencies]
 pytest = "*"
+pytest-mock = "*"
 pytest-cov = "*"
 
 [tool.poetry.group.docs.dependencies]
@@ -59,6 +60,7 @@ ignore-init-module-imports = true
 
 [tool.ruff.lint.per-file-ignores]
 "__init__.py" = ["F401"]
+"tests/*" = ["D", "S"]
 
 [tool.ruff.format]
 quote-style = "double"
