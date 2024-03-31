@@ -1,12 +1,12 @@
 
 
 ```
- _________                            
+ _________
 /_  __/ _ \  __ ______ ____  ___  ___ ____
  / / / ___/\ \/ __/ _ `/ _ \/ _ \/ -_) __/
-/_/ /_/  /___/\__/\_,_/_//_/_//_/\__/_/   
+/_/ /_/  /___/\__/\_,_/_//_/_//_/\__/_/
 ```
-# 
+#
 
 ![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/bateman/tpscanner-cli/release.yml?style=for-the-badge)
 ![GitHub Release](https://img.shields.io/github/v/release/bateman/tpscanner-cli?style=for-the-badge)
@@ -20,7 +20,7 @@
 
 If your don't want to use the command line, check the [TPscanner browser extension](https://github.com/bateman/tpscanner-cli). It works on Chromium-based browsers (e.g., Chrome, Edge), Firefox, and Safari.
 
-![Intro Image](img/intro.gif)
+![Intro Image](https://github.com/bateman/tpscanner-cli/blob/3f4d21cbdb0bf2e22ec27a95c62e53da1268a5c2/img/intro.gif)
 
 ## Setup
 
@@ -35,19 +35,16 @@ git clone https://github.com/yourusername/tpscanner.git
 cd tpscanner
 ```
 
-2. Install the project dependencies:
+2. Activate the virtual environment.
+
+3. Install the project dependencies:
 ```bash
 make install
 ```
 
-3. Activate the virtual environment:
-```bash
-poetry shell
-```
-
 ### External dependencies
 
-The script relies on [Selenium](https://www.selenium.dev/) web driver. Make sure that the Chrome/Chromium web browser is installed before running the script. 
+The script relies on [Selenium](https://www.selenium.dev/) web driver. Make sure that the Chrome/Chromium web browser is installed before running the script.
 
 ### Note
 
@@ -77,9 +74,9 @@ options:
   -i , --includena        Whether to include items marked as not available
   -w WAIT, --wait WAIT    Wait time between URLs requests (default 5 sec.)
   --headless              Run in headless mode
-  -c, --console           Whether to print results to the console 
+  -c, --console           Whether to print results to the console
   -x, --excel             Whether to save results to Excel
-  -l=LEVEL, --level=LEVEL Set the desired logging level 
+  -l=LEVEL, --level=LEVEL Set the desired logging level
                           (none, debug, info, warning, error, critical)
 ```
 
@@ -89,7 +86,7 @@ Alternatively, you can run the script as:
 poetry run tpscanner ...
 ```
 
-or 
+or
 
 ```bash
 make run ARGS="..."
@@ -117,4 +114,4 @@ You can configure the script by editing the file `config/config.json`. At the mo
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License - see the [LICENSE](https://raw.githubusercontent.com/bateman/tpscanner-cli/main/LICENSE) file for details.
