@@ -78,9 +78,9 @@ class Scraper:
                 )
             ).click()
         except Exception:
-            logger.critical("An error occurred while loading the page.")
-            self.driver.save_screenshot("error.png")
-            raise
+            logger.warn(
+                "The cookie message did not appear, trying to move on without accepting."
+            )
 
     def download_html(self, url: str) -> tuple:
         """Download the HTML content of the specified URL.
