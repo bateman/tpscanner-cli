@@ -1,6 +1,6 @@
 """This module contains the Console class for displaying formatted output using the Rich library."""
 
-from typing import ClassVar, List, Optional
+from typing import ClassVar, Dict, Iterable, List, Optional
 
 from rich.console import Console as RichConsole
 from rich.rule import Rule
@@ -26,8 +26,8 @@ class Console:
     """
 
     console: ClassVar = None
-    columns_individual: List[dict] = []
-    columns_cumulative: List[dict] = []
+    columns_individual: List[Dict] = []
+    columns_cumulative: List[Dict] = []
 
     def __init__(self):
         """Initialize the Console object with a RichConsole instance and sets the column configurations."""
@@ -87,8 +87,7 @@ class Console:
         else:
             self._rich_print(message, style=level)
 
-    def _create_table(self, title: str, columns: List[dict]) -> Table:
-        """Create a Rich Table object with the specified title and column configurations."""
+    def _create_table(self, title: str, columns: Iterable[Dict]) -> Table:
         table = Table(
             title=title,
             header_style="white on dark_blue",
@@ -101,7 +100,7 @@ class Console:
         return table
 
     def display_best_individual_deals(
-        self, best_individual_deals: List[dict], title: str
+        self, best_individual_deals: Iterable[Dict], title: str
     ) -> None:
         """Display the best individual deals.
 
@@ -109,7 +108,7 @@ class Console:
         and prints the top deals to the console.
 
         Arguments:
-            best_individual_deals (list): A list of Deal objects. Each Deal object should have a 'value' attribute.
+            best_individual_deals (Iterable[Dict]): A list of deal objects. Each Deal object should have a 'value' attribute.
             title (str): The title of the table.
 
         """
@@ -134,7 +133,7 @@ class Console:
         self._rich_print(best_individual_deals_table)
 
     def display_best_cumulative_deals(
-        self, best_cumulative_deals: List[dict], title: str
+        self, best_cumulative_deals: Iterable[Dict], title: str
     ) -> None:
         """Display the best cumulative deals.
 
@@ -142,7 +141,7 @@ class Console:
         and prints the top deals to the console.
 
         Arguments:
-            best_cumulative_deals (list): A list of cumulative deal objects. Each cumulative deal object should have a 'value' attribute.
+            best_cumulative_deals (Iterable[Dict]): A list of cumulative deal objects. Each cumulative deal object should have a 'value' attribute.
             title (str): The title of the table.
 
         """
