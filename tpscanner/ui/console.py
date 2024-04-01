@@ -79,13 +79,13 @@ class Console:
 
         """
         if level == "banner":
-            self.rich_print(message, style="bold green")
+            self._rich_print(message, style="bold white")
         elif level == "start" or level == "end":
             print("\n")
-            self.rich_print(Rule(message), style="bold magenta")
+            self._rich_print(Rule(message), style="bold magenta")
             print("\n")
         else:
-            self.rich_print(message, style=level)
+            self._rich_print(message, style=level)
 
     def _create_table(self, title: str, columns: List[dict]) -> Table:
         """Create a Rich Table object with the specified title and column configurations."""
@@ -131,7 +131,7 @@ class Console:
                 ":white_check_mark:" if item["availability"] else ":x:",
             )
         print("\n")
-        self.rich_print(best_individual_deals_table)
+        self._rich_print(best_individual_deals_table)
 
     def display_best_cumulative_deals(
         self, best_cumulative_deals: List[dict], title: str
@@ -161,9 +161,9 @@ class Console:
                 ":white_check_mark:" if item["availability"] else ":x:",
             )
         print("\n")
-        self.rich_print(best_cumulative_deals_table)
+        self._rich_print(best_cumulative_deals_table)
 
-    def rich_print(self, message: str, style: Optional[str] = None) -> None:
+    def _rich_print(self, message: str, style: Optional[str] = None) -> None:
         """Print a message with the specified style using the Rich library.
 
         Arguments:
@@ -171,4 +171,4 @@ class Console:
             style (str): The style to be applied to the message.
 
         """
-        self.console.print(message, style)
+        self.console.print(message, style=style)
