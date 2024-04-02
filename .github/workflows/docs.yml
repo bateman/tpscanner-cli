@@ -1,0 +1,35 @@
+name: Upload documentation to GitHub Pages 📓
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'docs/**'
+  workflow_dispatch:
+
+jobs:
+  docs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Extract Python version
+        id: get-python-version
+        run: |
+            echo "PYTHON_VERSION=$(grep 'PYTHON_VERSION' Makefile.env | sed 's/PYTHON_VERSION=//')" >> $GITHUB_ENV
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      - name: Install mkdocs dependencies  # This avoids installing all the other unecessary dependencies
+        run: pip install -r requirements-docs.txt
+      - name: Build documentation
+        run: mkdocs build --verbose --clean
+      - name: Publish documentation
+        uses: crazy-max/ghaction-github-pages@v4
+        with:
+          target_branch: gh-pages
+          build_dir: site
+        env:
+          GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
