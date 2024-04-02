@@ -6,7 +6,7 @@ from tpscanner.core.scanner import Scanner
 class TestRemoveUnavailableItems:
     # Removes all unavailable items from the individual deals.
     def test_remove_all_unavailable_items(self):
-        level = "Scanner Level 1"
+        level = "debug"
         urls = ["https://www.example.com/item1", "https://www.example.com/item2"]
         quantities = [1, 2]
         wait = 5
@@ -46,7 +46,7 @@ class TestRemoveUnavailableItems:
     # Removes no items since they are all available.
 
     def test_remove_no_items(self):
-        level = "Scanner Level 1"
+        level = "debug"
         urls = ["https://www.example.com/item1", "https://www.example.com/item2"]
         quantities = [1, 2]
         wait = 5
@@ -85,3 +85,276 @@ class TestRemoveUnavailableItems:
                 {"availability": True, "seller": "Seller C"},
             ],
         }
+
+
+class TestFindBestIndividualDeals:
+    # It correctly identifies items with free delivery threshold and cumulative price greater than or equal to
+    # the threshold and adds them to the best_individual_deals list.
+    def test_identify_items_with_free_delivery_threshold(self):
+        scanner = Scanner(
+            level="debug",
+            urls=["https://www.example.com", "https://www.example.com"],
+            quantities=[1, 2],
+            wait=5,
+            headless=True,
+            console_out=True,
+            excel_out=False,
+        )
+        scanner.individual_deals = {
+            "Item 1": [
+                {
+                    "name": "Item 1",
+                    "seller": "Seller A",
+                    "price": 10,
+                    "shipping_cost": 5,
+                    "total_price": 10 * scanner.quantities[0],
+                    "free_delivery": 20,
+                },
+                {
+                    "name": "Item 1",
+                    "seller": "Seller B",
+                    "price": 12,
+                    "shipping_cost": 3,
+                    "total_price": 12 * scanner.quantities[0],
+                    "free_delivery": 10,
+                },
+            ],
+            "Item 2": [
+                {
+                    "name": "Item 2",
+                    "seller": "Seller C",
+                    "price": 8,
+                    "shipping_cost": 2,
+                    "total_price": 8 * scanner.quantities[1],
+                    "free_delivery": 15,
+                },
+                {
+                    "name": "Item 2",
+                    "seller": "Seller D",
+                    "price": 9,
+                    "shipping_cost": 3,
+                    "total_price": 9 * scanner.quantities[1],
+                    "free_delivery": 10,
+                },
+                {
+                    "name": "Item 2",
+                    "seller": "Seller E",
+                    "price": 7,
+                    "shipping_cost": 3,
+                    "total_price": 7 * scanner.quantities[1],
+                    "free_delivery": None,
+                },
+            ],
+        }
+
+        scanner.find_best_individual_deals()
+        assert len(scanner.best_individual_deals) == 3
+        assert scanner.best_individual_deals[0]["name"] == "Item 1"
+        assert scanner.best_individual_deals[0]["seller"] == "Seller B"
+        assert scanner.best_individual_deals[0]["total_price"] == 12
+        assert (
+            scanner.best_individual_deals[0]["total_price"]
+            > scanner.best_individual_deals[0]["free_delivery"]
+        )
+        assert scanner.best_individual_deals[1]["name"] == "Item 2"
+        assert scanner.best_individual_deals[1]["seller"] == "Seller C"
+        assert scanner.best_individual_deals[1]["total_price"] == 16
+        assert (
+            scanner.best_individual_deals[1]["total_price"]
+            > scanner.best_individual_deals[1]["free_delivery"]
+        )
+        assert scanner.best_individual_deals[2]["name"] == "Item 2"
+        assert scanner.best_individual_deals[2]["seller"] == "Seller D"
+        assert scanner.best_individual_deals[2]["total_price"] == 18
+        assert (
+            scanner.best_individual_deals[2]["total_price"]
+            > scanner.best_individual_deals[2]["free_delivery"]
+        )
+
+    # The individual_deals dictionary is empty.
+    def test_empty_individual_deals(self):
+        scanner = Scanner(
+            level="debug",
+            urls=["https://www.example.com"],
+            quantities=[1],
+            wait=5,
+            headless=True,
+            console_out=True,
+            excel_out=False,
+        )
+        scanner.individual_deals = {}
+
+        scanner.find_best_individual_deals()
+        assert len(scanner.best_individual_deals) == 0
+
+
+class TestFindBestCumulativeDeals:
+    # It finds the common sellers among all items.
+    def test_find_common_sellers(self):
+        # Example initialization and invocation of the `find_best_cumulative_deals` method
+
+        # Create an instance of the Scanner class
+        scanner = Scanner(
+            level="debug",
+            urls=["url1", "url2"],
+            quantities=[1, 2],
+            wait=5,
+            headless=True,
+            console_out=True,
+            excel_out=False,
+        )
+
+        # Set the individual_deals attribute with some sample data
+        scanner.individual_deals = {
+            "item1": [
+                {
+                    "seller": "seller1",
+                    "seller_link": "seller1_link",
+                    "seller_reviews": 10,
+                    "seller_reviews_link": "seller1_reviews_link",
+                    "seller_rating": 4.5,
+                    "delivery_price": 5.0,
+                    "free_delivery": 50.0,
+                    "availability": True,
+                    "link": "item1_link",
+                    "total_price": 10.0,
+                },
+                {
+                    "seller": "seller2",
+                    "seller_link": "seller2_link",
+                    "seller_reviews": 100,
+                    "seller_reviews_link": "seller2_reviews_link",
+                    "seller_rating": 4.0,
+                    "delivery_price": 5.0,
+                    "free_delivery": 30.0,
+                    "availability": True,
+                    "link": "item2_link",
+                    "total_price": 25.0,
+                },
+            ],
+            "item2": [
+                {
+                    "seller": "seller2",
+                    "seller_link": "seller2_link",
+                    "seller_reviews": 100,
+                    "seller_reviews_link": "seller2_reviews_link",
+                    "seller_rating": 4.0,
+                    "delivery_price": 5.0,
+                    "free_delivery": 30.0,
+                    "availability": True,
+                    "link": "item2_link",
+                    "total_price": 15.0,
+                },
+                {
+                    "seller": "seller1",
+                    "seller_link": "seller1_link",
+                    "seller_reviews": 10,
+                    "seller_reviews_link": "seller1_reviews_link",
+                    "seller_rating": 4.5,
+                    "delivery_price": 5.0,
+                    "free_delivery": 50.0,
+                    "availability": True,
+                    "link": "item1_link",
+                    "total_price": 20.0,
+                },
+            ],
+        }
+
+        # Invoke the find_best_cumulative_deals method
+        scanner.find_best_cumulative_deals()
+
+        # Assert best_cumulative_deals not empty
+        assert scanner.best_cumulative_deals
+        # Assert the common sellers are found
+        assert sorted(set(x["seller"] for x in scanner.best_cumulative_deals)) == [
+            "seller1",
+            "seller2",
+        ]
+        # Assert the cumulative price is calculated correctly
+        # seller1
+        assert scanner.best_cumulative_deals[0]["cumulative_price"] == 30.0
+        assert (
+            scanner.best_cumulative_deals[0]["cumulative_price_plus_delivery"] == 35.0
+        )
+        # seller2
+        assert scanner.best_cumulative_deals[1]["cumulative_price"] == 40.0
+        assert (
+            scanner.best_cumulative_deals[1]["cumulative_price_plus_delivery"] == 40.0
+        )
+
+    # There are no common sellers among all items.
+    def test_no_common_sellers(self):
+        # Example initialization and invocation of the `find_best_cumulative_deals` method
+
+        # Create an instance of the Scanner class
+        scanner = Scanner(
+            level="level",
+            urls=["url1", "url2"],
+            quantities=[1, 2],
+            wait=5,
+            headless=True,
+            console_out=True,
+            excel_out=False,
+        )
+
+        # Set the individual_deals attribute with some sample data
+        scanner.individual_deals = {
+            "item1": [
+                {
+                    "seller": "seller1",
+                    "seller_link": "seller1_link",
+                    "seller_reviews": "seller1_reviews",
+                    "seller_reviews_link": "seller1_reviews_link",
+                    "seller_rating": 4.5,
+                    "delivery_price": 5.0,
+                    "free_delivery": 50.0,
+                    "availability": True,
+                    "link": "item1_link",
+                    "total_price": 10.0,
+                },
+                {
+                    "seller": "seller3",
+                    "seller_link": "seller3_link",
+                    "seller_reviews": 231,
+                    "seller_reviews_link": "seller3_reviews_link",
+                    "seller_rating": 4.5,
+                    "delivery_price": 5.0,
+                    "free_delivery": 50.0,
+                    "availability": True,
+                    "link": "item1_link",
+                    "total_price": 20.0,
+                },
+            ],
+            "item2": [
+                {
+                    "seller": "seller2",
+                    "seller_link": "seller2_link",
+                    "seller_reviews": 111,
+                    "seller_reviews_link": "seller2_reviews_link",
+                    "seller_rating": 4.0,
+                    "delivery_price": 5.0,
+                    "free_delivery": 30.0,
+                    "availability": True,
+                    "link": "item2_link",
+                    "total_price": 15.0,
+                },
+                {
+                    "seller": "seller4",
+                    "seller_link": "seller4_link",
+                    "seller_reviews": 123,
+                    "seller_reviews_link": "seller4_reviews_link",
+                    "seller_rating": 4.0,
+                    "delivery_price": 5.0,
+                    "free_delivery": 30.0,
+                    "availability": True,
+                    "link": "item2_link",
+                    "total_price": 25.0,
+                },
+            ],
+        }
+
+        # Invoke the find_best_cumulative_deals method
+        scanner.find_best_cumulative_deals()
+
+        # Asset best_cumulative_deals is empty
+        assert not scanner.best_cumulative_deals
