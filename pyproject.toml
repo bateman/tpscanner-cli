@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "TPscanner"
-version = "1.1.3"
+version = "1.1.4"
 description = "A Python script that finds the best cumulative and individual deals from Trovaprezzi.it"
 authors = ["Fabio Calefato <@bateman>"]
 license = "MIT License"
