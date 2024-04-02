@@ -8,19 +8,19 @@
 ```
 #
 
-![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/bateman/tpscanner-cli/release.yml?style=for-the-badge)
-![GitHub Release](https://img.shields.io/github/v/release/bateman/tpscanner-cli?style=for-the-badge)
-![GitHub language count](https://img.shields.io/github/languages/count/bateman/tpscanner-cli?style=for-the-badge)
-![GitHub top language](https://img.shields.io/github/languages/top/bateman/tpscanner-cli?style=for-the-badge)
-![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/bateman/tpscanner-cli?style=for-the-badge)
-![GitHub License](https://img.shields.io/github/license/bateman/tpscanner-cli?style=for-the-badge)
+![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/bateman/tpscanner-cli/release.yml?style=flat-square)
+![GitHub Release](https://img.shields.io/github/v/release/bateman/tpscanner-cli?style=flat-square)
+![GitHub language count](https://img.shields.io/github/languages/count/bateman/tpscanner-cli?style=flat-square)
+![GitHub top language](https://img.shields.io/github/languages/top/bateman/tpscanner-cli?style=flat-square)
+![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/bateman/tpscanner-cli?style=flat-square)
+![GitHub License](https://img.shields.io/github/license/bateman/tpscanner-cli?style=flat-square)
 
 
 ***TPscanner*** is a Python script that extracts prices of items from [Trovaprezzi.it](https://www.trovaprezzi.it/), sorts them, displays and saves the results in a spreadsheet. It also finds the best cumulative and individual deals.
 
 If your don't want to use the command line, check the [TPscanner browser extension](https://github.com/bateman/tpscanner-cli). It works on Chromium-based browsers (e.g., Chrome, Edge), Firefox, and Safari.
 
-![Intro Image](https://github.com/bateman/tpscanner-cli/blob/3f4d21cbdb0bf2e22ec27a95c62e53da1268a5c2/img/intro.gif)
+![Intro Image](img/intro.gif)
 
 ## Setup
 
