@@ -26,7 +26,7 @@ jobs:
       - name: Install dependencies
         run: make project/install
       - name: Run pytest
-        run: make project/tests ARGS=--cov-report=json
+        run: make project/tests ARGS="--cov-report=json"
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v4.0.1
         with:
