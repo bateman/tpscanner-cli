@@ -1,38 +1,40 @@
-name: release
-'on':
+name: Release package to GitHub 📦
+
+on:
   push:
     tags:
       - '*'
+
+env:
+  PACKAGE_NAME: ''
+
 jobs:
-  release:
-    name: Release
+  build:
+    name: Build the package
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      - name: Extract Python version
+        id: get-python-version
+        run: |
+            echo "PYTHON_VERSION=$(grep 'PYTHON_VERSION' Makefile.env | sed 's/PYTHON_VERSION=//')" >> $GITHUB_ENV
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.12'
+          python-version: ${{ env.PYTHON_VERSION }}
       - name: Install Poetry
         uses: Gr1N/setup-poetry@v8
-      - name: Build package
-        run: make project/build
-      - name: Retrieve tag
-        id: tag
-        run: 'echo "version=${GITHUB_REF/refs\/tags\//}" >> $GITHUB_OUTPUT'
-      - name: Retrieve repo name
-        id: reponame
-        run: >-
-          echo "name=$(echo ${{ github.repository }} | cut -d '/' -f 2)" >>
-          $GITHUB_OUTPUT
-      - name: Create Release
-        id: create_release
-        uses: softprops/action-gh-release@v1
-        env:
-          GITHUB_TOKEN: '${{ secrets.RELEASE_TOKEN }}'
+      - name: Install dependencies
+        run: poetry install
+      - name: Build a binary wheel and a source tarball
+        run: poetry build
+      - name: Store the distribution packages
+        uses: actions/upload-artifact@v3
         with:
-          name: 'TPscanner-cli ver. ${{ steps.tag.outputs.version }}'
-          generate_release_notes: null
-          files: >
-            "./dist/${{ steps.reponame.outputs.name }}-${{ steps.tag.outputs.version }}.tar.gz"
+          name: python-package-distributions
+          path: dist/
+      - name: Retrieve package name
+        id: packagename
+        run: >-
+          echo "PACKAGE_NAME=$(echo ${{ github.repository }} | cut -d '/' -f 2)" >> $GITHUB_ENV
