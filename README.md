@@ -30,17 +30,15 @@ Once you have Poetry installed, follow these steps to set up the project:
 
 1. Clone the repository:
 
-```bash
-git clone https://github.com/yourusername/tpscanner.git
-cd tpscanner
-```
+        git clone https://github.com/yourusername/tpscanner-cli.git
+        cd tpscanner-cli
 
-2. Activate the virtual environment.
+2. Createa and activate a virtual environment (`pyenv` is recommended).
 
 3. Install the project dependencies:
-```bash
-make install
-```
+
+        make install
+
 
 ### External dependencies
 
