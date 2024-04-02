@@ -13,7 +13,7 @@
 ![GitHub language count](https://img.shields.io/github/languages/count/bateman/tpscanner-cli?style=flat-square)
 ![GitHub top language](https://img.shields.io/github/languages/top/bateman/tpscanner-cli?style=flat-square)
 ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/bateman/tpscanner-cli?style=flat-square)
-[![codecov](https://codecov.io/gh/bateman/tpscanner-cli/graph/badge.svg?token=HK1VGHPP7Z)](https://codecov.io/gh/bateman/tpscanner-cli)
+![Codecov](https://img.shields.io/codecov/c/github/bateman/tpscanner-cli?style=flat-square)
 ![GitHub License](https://img.shields.io/github/license/bateman/tpscanner-cli?style=flat-square)
 
 
